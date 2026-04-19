@@ -7,9 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--g1:#1a6b2f;--g2:#22913f;--g3:#2dbd55;--g4:#4dd97a;}
 body{font-family:'Nunito',sans-serif;background:#0b1a0f;min-height:100vh;color:#fff;}
-/* SIDEBAR */
 .sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:#061009;border-right:1px solid rgba(45,189,85,0.18);display:flex;flex-direction:column;z-index:100;}
 .sb-brand{padding:20px 18px 16px;border-bottom:1px solid rgba(45,189,85,0.15);}
 .sb-brand-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1;}
@@ -26,7 +24,6 @@ body{font-family:'Nunito',sans-serif;background:#0b1a0f;min-height:100vh;color:#
 .nav-item.active{color:#4dd97a;border-left-color:#4dd97a;background:rgba(45,189,85,0.1);}
 .nav-item .ni{font-size:15px;width:18px;text-align:center;}
 .sb-footer{padding:14px 18px;border-top:1px solid rgba(45,189,85,0.15);font-size:11px;color:rgba(255,255,255,0.25);}
-/* MAIN */
 .main{margin-left:220px;min-height:100vh;}
 .topbar{background:#061009;border-bottom:1px solid rgba(45,189,85,0.15);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
 .topbar-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;}
@@ -35,20 +32,14 @@ body{font-family:'Nunito',sans-serif;background:#0b1a0f;min-height:100vh;color:#
 .tb-btn{background:rgba(45,189,85,0.15);border:1px solid rgba(45,189,85,0.3);border-radius:8px;padding:7px 14px;font-size:12px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;color:#4dd97a;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
 .tb-btn:hover{background:rgba(45,189,85,0.25);}
 .tb-btn.danger{color:#f0997b;border-color:rgba(240,153,123,0.3);background:rgba(240,153,123,0.1);}
-.tb-btn.danger:hover{background:rgba(240,153,123,0.2);}
 .content{padding:24px 28px;}
-/* PANELS */
 .view{display:none;}.view.active{display:block;}
-/* STAT CARDS */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
 .stat-card{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;padding:16px 18px;}
 .stat-val{font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;color:#fff;line-height:1;}
-.stat-val.green{color:#4dd97a;}
-.stat-val.orange{color:#f0b97b;}
-.stat-val.red{color:#f0997b;}
+.stat-val.green{color:#4dd97a;}.stat-val.orange{color:#f0b97b;}.stat-val.red{color:#f0997b;}
 .stat-lbl{font-size:11px;color:rgba(255,255,255,0.35);font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
 .stat-sub{font-size:11px;color:rgba(255,255,255,0.25);margin-top:6px;}
-/* TABLE */
 .table-card{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;overflow:hidden;}
 .table-head{padding:14px 18px;border-bottom:1px solid rgba(45,189,85,0.15);display:flex;align-items:center;justify-content:space-between;}
 .table-head-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;}
@@ -69,7 +60,6 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .act-btn:hover{background:rgba(45,189,85,0.15);}
 .act-btn.red{color:#f0997b;border-color:rgba(240,153,123,0.25);}
 .act-btn.red:hover{background:rgba(240,153,123,0.1);}
-/* SEAT MAP */
 .sm-wrap{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;padding:20px;}
 .sm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .sm-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;}
@@ -85,8 +75,8 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .a-aisle-lbl{writing-mode:vertical-rl;font-size:9px;color:rgba(255,255,255,0.2);letter-spacing:1px;font-family:'Rajdhani',sans-serif;text-transform:uppercase;}
 .a-seat{height:36px;border:1px solid rgba(45,189,85,0.28);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'Rajdhani',sans-serif;cursor:pointer;color:rgba(255,255,255,0.55);background:rgba(0,0,0,0.25);transition:all 0.2s;width:100%;}
 .a-seat:hover:not(.a-booked){border-color:#4dd97a;color:#fff;}
-.a-seat.a-booked{background:rgba(240,153,123,0.1);color:#f0997b;border-color:rgba(240,153,123,0.3);cursor:default;}
 .a-seat.a-conf{background:rgba(45,189,85,0.18);color:#4dd97a;border-color:rgba(77,217,122,0.4);}
+.a-seat.a-pend{background:rgba(240,185,123,0.12);color:#f0b97b;border-color:rgba(240,185,123,0.35);}
 .a-seat-pair{display:flex;gap:5px;}
 .a-seat-pair .a-seat{flex:1;}
 .sm-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
@@ -100,7 +90,6 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .smd-row span:first-child{color:rgba(255,255,255,0.4);}
 .smd-row span:last-child{color:#fff;}
 .sm-flex{display:flex;align-items:flex-start;gap:0;}
-/* MODAL */
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:none;align-items:center;justify-content:center;}
 .modal-backdrop.open{display:flex;}
 .modal{background:#0d1f12;border:1px solid rgba(45,189,85,0.3);border-radius:14px;padding:24px;width:440px;max-width:95vw;max-height:90vh;overflow-y:auto;}
@@ -111,21 +100,16 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .m-row span:last-child{color:#fff;}
 .modal-btns{display:flex;gap:8px;margin-top:16px;}
 .m-btn{flex:1;padding:10px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;}
-.m-btn-green{background:#22913f;color:#fff;}
-.m-btn-green:hover{background:#2dbd55;}
-.m-btn-red{background:rgba(240,153,123,0.15);border:1px solid rgba(240,153,123,0.3);color:#f0997b;}
-.m-btn-red:hover{background:rgba(240,153,123,0.25);}
-.m-btn-ghost{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
-.m-btn-ghost:hover{color:#fff;}
-/* ADD BOOKING FORM */
+.m-btn-green{background:#22913f;color:#fff;}.m-btn-green:hover{background:#2dbd55;}
+.m-btn-red{background:rgba(240,153,123,0.15);border:1px solid rgba(240,153,123,0.3);color:#f0997b;}.m-btn-red:hover{background:rgba(240,153,123,0.25);}
+.m-btn-ghost{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}.m-btn-ghost:hover{color:#fff;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .fg{display:flex;flex-direction:column;gap:5px;}
 .fg label{font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);}
 .fg input,.fg select,.fg textarea{background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:7px;padding:8px 10px;font-size:13px;font-family:'Nunito',sans-serif;color:#fff;outline:none;transition:border 0.2s;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#4dd97a;}
-.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,0.25);}
+.fg input:focus,.fg select:focus{border-color:#4dd97a;}
+.fg input::placeholder{color:rgba(255,255,255,0.25);}
 .fg select option{background:#0d1f12;}
-/* REVENUE */
 .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
 .rev-card{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;padding:18px;}
 .rev-lbl{font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px;}
@@ -137,7 +121,6 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .rbar-track{flex:1;background:rgba(255,255,255,0.06);border-radius:4px;height:10px;overflow:hidden;}
 .rbar-fill{height:100%;background:#22913f;border-radius:4px;transition:width 0.5s ease;}
 .rbar-val{width:60px;text-align:right;color:rgba(255,255,255,0.55);font-family:'Rajdhani',sans-serif;}
-/* SETTINGS */
 .settings-card{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;padding:18px;margin-bottom:14px;}
 .settings-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#4dd97a;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(45,189,85,0.12);}
 .srow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,189,85,0.06);}
@@ -148,23 +131,28 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .toggle.on{background:#22913f;}
 .toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform 0.3s;}
 .toggle.on::after{transform:translateX(18px);}
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#22913f;border:1px solid #4dd97a;border-radius:10px;padding:12px 18px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:0.5px;color:#fff;z-index:500;transform:translateY(80px);opacity:0;transition:all 0.3s;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
-/* SEARCH */
 .search-bar{background:rgba(0,0,0,0.35);border:1px solid rgba(45,189,85,0.2);border-radius:8px;padding:7px 12px;font-size:13px;font-family:'Nunito',sans-serif;color:#fff;outline:none;width:200px;transition:border 0.2s;}
 .search-bar:focus{border-color:rgba(77,217,122,0.4);}
 .search-bar::placeholder{color:rgba(255,255,255,0.25);}
-/* EMPTY STATE */
-.empty{text-align:center;padding:40px;color:rgba(255,255,255,0.25);font-size:13px;}
-.empty-icon{font-size:32px;margin-bottom:8px;}
-/* scrollbar */
+/* Fullscreen loader */
+.page-load{position:fixed;inset:0;background:#0b1a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
+.pl-spin{width:44px;height:44px;border:3px solid rgba(77,217,122,0.15);border-top-color:#4dd97a;border-radius:50%;animation:spin 0.75s linear infinite;margin-bottom:14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pl-txt{font-family:'Rajdhani',sans-serif;font-size:14px;color:#4dd97a;letter-spacing:2px;text-transform:uppercase;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(45,189,85,0.3);border-radius:3px;}
 </style>
 </head>
 <body>
+
+<!-- Initial page loader -->
+<div class="page-load" id="page-load">
+  <div class="pl-spin"></div>
+  <div class="pl-txt" id="pl-msg">Connecting to database…</div>
+</div>
 
 <div class="sidebar">
   <div class="sb-brand">
@@ -174,16 +162,16 @@ tr:hover td{background:rgba(45,189,85,0.04);}
   </div>
   <div class="sb-nav">
     <div class="nav-section">Overview</div>
-    <div class="nav-item active" onclick="nav('dashboard')"><span class="ni">📊</span> Dashboard</div>
-    <div class="nav-item" onclick="nav('bookings')"><span class="ni">🎟</span> Bookings</div>
-    <div class="nav-item" onclick="nav('seatmap')"><span class="ni">🚌</span> Seat Map</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)"><span class="ni">📊</span> Dashboard</div>
+    <div class="nav-item" onclick="nav('bookings',this)"><span class="ni">🎟</span> Bookings</div>
+    <div class="nav-item" onclick="nav('seatmap',this)"><span class="ni">🚌</span> Seat Map</div>
     <div class="nav-section">Management</div>
-    <div class="nav-item" onclick="nav('revenue')"><span class="ni">💰</span> Revenue</div>
-    <div class="nav-item" onclick="nav('add')"><span class="ni">➕</span> Add Booking</div>
+    <div class="nav-item" onclick="nav('revenue',this)"><span class="ni">💰</span> Revenue</div>
+    <div class="nav-item" onclick="nav('add',this)"><span class="ni">➕</span> Add Booking</div>
     <div class="nav-section">System</div>
-    <div class="nav-item" onclick="nav('settings')"><span class="ni">⚙️</span> Settings</div>
+    <div class="nav-item" onclick="nav('settings',this)"><span class="ni">⚙️</span> Settings</div>
   </div>
-  <div class="sb-footer">Sambriddhi Air Bus v1.0<br>Admin: Samir Ghimire</div>
+  <div class="sb-footer">Sambriddhi Air Bus v2.0<br>Admin: Samir Ghimire</div>
 </div>
 
 <div class="main">
@@ -191,6 +179,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="topbar-title" id="topbar-title">Dashboard <span>Overview</span></div>
     <div class="topbar-right">
       <input class="search-bar" id="search-bar" placeholder="Search bookings…" oninput="searchBookings()" style="display:none;">
+      <button class="tb-btn" onclick="refreshData()">↺ Refresh</button>
       <button class="tb-btn" onclick="exportCSV()">⬇ Export CSV</button>
       <button class="tb-btn" onclick="openAddModal()">+ New Booking</button>
     </div>
@@ -200,37 +189,15 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <!-- DASHBOARD -->
     <div class="view active" id="v-dashboard">
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-val green" id="st-total">0</div>
-          <div class="stat-lbl">Total Bookings</div>
-          <div class="stat-sub" id="st-today">0 today</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="st-revenue">Rs. 0</div>
-          <div class="stat-lbl">Total Revenue</div>
-          <div class="stat-sub">Confirmed only</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val orange" id="st-pend">0</div>
-          <div class="stat-lbl">Pending</div>
-          <div class="stat-sub">Awaiting payment</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val red" id="st-canc">0</div>
-          <div class="stat-lbl">Cancelled</div>
-          <div class="stat-sub">This month</div>
-        </div>
+        <div class="stat-card"><div class="stat-val green" id="st-total">—</div><div class="stat-lbl">Total Bookings</div><div class="stat-sub" id="st-today">—</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-revenue">—</div><div class="stat-lbl">Total Revenue</div><div class="stat-sub">Confirmed only</div></div>
+        <div class="stat-card"><div class="stat-val orange" id="st-pend">—</div><div class="stat-lbl">Pending</div><div class="stat-sub">Awaiting payment</div></div>
+        <div class="stat-card"><div class="stat-val red" id="st-canc">—</div><div class="stat-lbl">Cancelled</div><div class="stat-sub">All time</div></div>
       </div>
       <div class="table-card">
-        <div class="table-head">
-          <div class="table-head-title">Recent Bookings</div>
-        </div>
-        <table>
-          <thead><tr>
-            <th>Ref</th><th>Passenger</th><th>Route</th><th>Date</th><th>Seats</th><th>Total</th><th>Status</th><th>Action</th>
-          </tr></thead>
-          <tbody id="dash-tbody"></tbody>
-        </table>
+        <div class="table-head"><div class="table-head-title">Recent Bookings</div></div>
+        <table><thead><tr><th>Ref</th><th>Passenger</th><th>Route</th><th>Date</th><th>Seats</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="dash-tbody"></tbody></table>
       </div>
     </div>
 
@@ -246,12 +213,8 @@ tr:hover td{background:rgba(45,189,85,0.04);}
             <div class="tf" onclick="filterBkgs('Cancelled',this)">Cancelled</div>
           </div>
         </div>
-        <table>
-          <thead><tr>
-            <th>Ref</th><th>Passenger</th><th>Phone</th><th>Route</th><th>Date</th><th>Seats</th><th>Total</th><th>Status</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="bkg-tbody"></tbody>
-        </table>
+        <table><thead><tr><th>Ref</th><th>Passenger</th><th>Phone</th><th>Route</th><th>Date</th><th>Seats</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bkg-tbody"></tbody></table>
       </div>
     </div>
 
@@ -261,14 +224,14 @@ tr:hover td{background:rgba(45,189,85,0.04);}
         <div class="sm-header">
           <div class="sm-title">Live Seat Map</div>
           <div class="route-tabs">
-            <div class="rt sel" onclick="switchRoute('Dharan','Pokhara',this)">Dharan → Pokhara</div>
-            <div class="rt" onclick="switchRoute('Pokhara','Dharan',this)">Pokhara → Dharan</div>
-            <div class="rt" onclick="switchRoute('Itahari','Pokhara',this)">Itahari → Pokhara</div>
+            <div class="rt sel" onclick="switchRoute('Dharan → Pokhara',this)">Dharan→Pokhara</div>
+            <div class="rt" onclick="switchRoute('Pokhara → Dharan',this)">Pokhara→Dharan</div>
+            <div class="rt" onclick="switchRoute('Itahari → Pokhara',this)">Itahari→Pokhara</div>
           </div>
         </div>
         <div style="margin-bottom:10px;">
           <label style="font-size:11px;color:rgba(255,255,255,0.4);font-family:Rajdhani,sans-serif;letter-spacing:1px;text-transform:uppercase;">Date: </label>
-          <input type="date" id="map-date" style="background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 10px;font-size:12px;color:#fff;outline:none;font-family:Nunito,sans-serif;" onchange="renderSeatMap()">
+          <input type="date" id="map-date" style="background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 10px;font-size:12px;color:#fff;outline:none;font-family:Nunito,sans-serif;width:auto;" onchange="renderSeatMap()">
         </div>
         <div class="sm-flex">
           <div>
@@ -280,21 +243,20 @@ tr:hover td{background:rgba(45,189,85,0.04);}
                 <div style="display:flex;gap:6px;" id="a-sleeper-row"></div>
               </div>
             </div>
-            <div class="sm-legend" style="max-width:220px;margin-top:10px;">
+            <div class="sm-legend" style="max-width:260px;margin-top:10px;">
               <div class="sml"><div class="sml-dot" style="background:rgba(0,0,0,0.3);border:1px solid rgba(45,189,85,0.3);"></div>Free</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(45,189,85,0.18);border:1px solid rgba(77,217,122,0.4);"></div>Confirmed</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(240,185,123,0.12);border:1px solid rgba(240,185,123,0.35);"></div>Pending</div>
-              <div class="sml"><div class="sml-dot" style="background:rgba(240,153,123,0.1);border:1px solid rgba(240,153,123,0.3);"></div>Booked/Sold</div>
             </div>
           </div>
           <div class="sm-detail">
             <div class="smd-card" id="seat-info-card">
               <div class="smd-title">Seat Info</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.3);font-style:italic;">Click a seat to see passenger details</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.3);font-style:italic;">Click a seat to see details</div>
             </div>
             <div class="smd-card">
               <div class="smd-title">Summary</div>
-              <div class="smd-row"><span>Total Seats</span><span id="sm-total">29</span></div>
+              <div class="smd-row"><span>Total Seats</span><span>29</span></div>
               <div class="smd-row"><span>Confirmed</span><span id="sm-conf" style="color:#4dd97a;">0</span></div>
               <div class="smd-row"><span>Pending</span><span id="sm-pend" style="color:#f0b97b;">0</span></div>
               <div class="smd-row"><span>Available</span><span id="sm-avail">29</span></div>
@@ -307,22 +269,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <!-- REVENUE -->
     <div class="view" id="v-revenue">
       <div class="rev-grid">
-        <div class="rev-card">
-          <div class="rev-lbl">Total Revenue</div>
-          <div class="rev-val" id="rv-total">Rs. 0</div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-lbl">Avg per Booking</div>
-          <div class="rev-val" id="rv-avg">Rs. 0</div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-lbl">Seats Sold</div>
-          <div class="rev-val" id="rv-seats" style="color:#fff;">0</div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-lbl">Pending Amount</div>
-          <div class="rev-val" id="rv-pend" style="color:#f0b97b;">Rs. 0</div>
-        </div>
+        <div class="rev-card"><div class="rev-lbl">Total Revenue</div><div class="rev-val" id="rv-total">Rs. 0</div></div>
+        <div class="rev-card"><div class="rev-lbl">Avg per Booking</div><div class="rev-val" id="rv-avg">Rs. 0</div></div>
+        <div class="rev-card"><div class="rev-lbl">Seats Sold</div><div class="rev-val" id="rv-seats" style="color:#fff;">0</div></div>
+        <div class="rev-card"><div class="rev-lbl">Pending Amount</div><div class="rev-val" id="rv-pend" style="color:#f0b97b;">Rs. 0</div></div>
       </div>
       <div class="rev-bar-wrap">
         <div class="rbar-title">Revenue by Route</div>
@@ -338,21 +288,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg"><label>Full Name</label><input type="text" id="a-name" placeholder="Passenger name"></div>
           <div class="fg"><label>Phone</label><input type="tel" id="a-phone" placeholder="98XXXXXXXX"></div>
           <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="a-email" placeholder="email@example.com"></div>
-          <div class="fg"><label>Route</label>
-            <select id="a-route">
-              <option>Dharan → Pokhara</option>
-              <option>Pokhara → Dharan</option>
-              <option>Itahari → Pokhara</option>
-            </select>
-          </div>
+          <div class="fg"><label>Route</label><select id="a-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
           <div class="fg"><label>Travel Date</label><input type="date" id="a-date"></div>
           <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. 5, 6, SL1"></div>
-          <div class="fg"><label>Status</label>
-            <select id="a-status">
-              <option>Pending</option>
-              <option>Confirmed</option>
-            </select>
-          </div>
+          <div class="fg"><label>Status</label><select id="a-status"><option>Pending</option><option>Confirmed</option></select></div>
           <div class="fg"><label>Notes</label><input type="text" id="a-notes" placeholder="Optional notes"></div>
         </div>
         <div id="add-err" style="color:#f0997b;font-size:12px;margin-top:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
@@ -366,44 +305,27 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <!-- SETTINGS -->
     <div class="view" id="v-settings">
       <div class="settings-card">
-        <div class="settings-title">General Settings</div>
-        <div class="srow">
-          <div><div class="srow-lbl">Price per Seat</div><div class="srow-sub">Standard AC Deluxe</div></div>
-          <input type="number" value="2500" id="cfg-price" style="width:90px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;">
-        </div>
-        <div class="srow">
-          <div><div class="srow-lbl">Owner Email</div><div class="srow-sub">Booking notifications sent here</div></div>
-          <input type="email" value="sambriddhiairbus@gmail.com" id="cfg-email" style="width:220px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;">
-        </div>
+        <div class="settings-title">Connection Status</div>
+        <div class="srow"><div><div class="srow-lbl">JSONBin Database</div><div class="srow-sub" id="bin-id-display">Loading…</div></div><span id="conn-status" style="font-family:Rajdhani,sans-serif;font-size:12px;color:#4dd97a;font-weight:600;">●  CONNECTED</span></div>
       </div>
       <div class="settings-card">
-        <div class="settings-title">Notifications</div>
-        <div class="srow">
-          <div><div class="srow-lbl">Email alerts for new bookings</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="srow">
-          <div><div class="srow-lbl">Show pending bookings on dashboard</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="srow">
-          <div><div class="srow-lbl">Auto-confirm after payment</div></div>
-          <div class="toggle" onclick="this.classList.toggle('on')"></div>
-        </div>
+        <div class="settings-title">General</div>
+        <div class="srow"><div><div class="srow-lbl">Price per Seat</div></div><input type="number" value="2500" id="cfg-price" style="width:90px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
+        <div class="srow"><div><div class="srow-lbl">Owner Email</div></div><input type="email" value="sambriddhiairbus@gmail.com" id="cfg-email" style="width:240px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
       </div>
       <div class="settings-card">
         <div class="settings-title">Data</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <button class="tb-btn" onclick="exportCSV()">⬇ Export All Bookings (CSV)</button>
-          <button class="tb-btn danger" onclick="if(confirm('Clear ALL demo bookings? This cannot be undone.')){bookings=[];saveData();refreshAll();showToast('All bookings cleared.');}">🗑 Clear All Bookings</button>
+          <button class="tb-btn danger" onclick="clearAllBookings()">🗑 Clear All Bookings</button>
         </div>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
-<!-- DETAIL MODAL -->
+<!-- Detail modal -->
 <div class="modal-backdrop" id="detail-modal">
   <div class="modal">
     <div class="modal-title" id="modal-title">Booking Details</div>
@@ -412,7 +334,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
   </div>
 </div>
 
-<!-- ADD MODAL (quick) -->
+<!-- Quick add modal -->
 <div class="modal-backdrop" id="add-modal">
   <div class="modal">
     <div class="modal-title">Quick Add Booking</div>
@@ -420,18 +342,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       <div class="fg"><label>Full Name</label><input type="text" id="m-name" placeholder="Passenger name"></div>
       <div class="fg"><label>Phone</label><input type="tel" id="m-phone" placeholder="98XXXXXXXX"></div>
       <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="m-email" placeholder="email@example.com"></div>
-      <div class="fg"><label>Route</label>
-        <select id="m-route">
-          <option>Dharan → Pokhara</option>
-          <option>Pokhara → Dharan</option>
-          <option>Itahari → Pokhara</option>
-        </select>
-      </div>
+      <div class="fg"><label>Route</label><select id="m-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
       <div class="fg"><label>Travel Date</label><input type="date" id="m-date"></div>
       <div class="fg"><label>Seats (e.g. 5, 6, SL1)</label><input type="text" id="m-seats" placeholder="5, 6"></div>
-      <div class="fg"><label>Status</label>
-        <select id="m-status"><option>Pending</option><option>Confirmed</option></select>
-      </div>
+      <div class="fg"><label>Status</label><select id="m-status"><option>Pending</option><option>Confirmed</option></select></div>
       <div class="fg"><label>Notes</label><input type="text" id="m-notes" placeholder="Optional"></div>
     </div>
     <div id="m-err" style="color:#f0997b;font-size:12px;margin-top:8px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
@@ -445,330 +359,352 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 <div class="toast" id="toast"></div>
 
 <script>
-const PRICE = 2500;
-let currentFilter = 'all';
-let currentMapRoute = 'Dharan → Pokhara';
+// ═══════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════
+const PRICE      = 2500;
+const MASTER_KEY = '$2a$10$lM8iv375PzNB9kY.0H2Pn.R/2MzTafbZ8gtWgCHIGvMsw2np8NC7K';
+const ACCESS_KEY = '$2a$10$Rq9teSheNL0xRMq7e0qB6.YGsp.L.Ql9fBpInwnRK9Km2UmYr1JNy';
+const BIN_NAME   = 'sambriddhi-bookings';
+const BIN_ID_KEY = 'sambriddhi_bin_id';
+// ═══════════════════════════════════════════
 
-// ─── STORAGE ──────────────────────────────────────────────────────────
-const STORE_KEY = 'sambriddhi_bookings';
-let bookings = [];
+let bookings         = [];
+let cachedBinId      = localStorage.getItem(BIN_ID_KEY) || null;
+let currentFilter    = 'all';
+let currentMapRoute  = 'Dharan → Pokhara';
 
-function loadData() {
-  try { bookings = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e) { bookings = []; }
-  if (!bookings.length) seedDemo();
-}
-function saveData() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(bookings));
-}
-function seedDemo() {
-  const today = new Date().toISOString().split('T')[0];
-  bookings = [
-    { id:'BK001', name:'Rajan Sharma', phone:'9841234567', email:'rajan@gmail.com', route:'Dharan → Pokhara', date:'2025-07-15', seats:['3','5'], status:'Confirmed', notes:'Window seat preferred', created: today },
-    { id:'BK002', name:'Sunita Thapa', phone:'9851112233', email:'sunita@yahoo.com', route:'Pokhara → Dharan', date:'2025-07-16', seats:['8'], status:'Pending', notes:'', created: today },
-    { id:'BK003', name:'Dipak Rai', phone:'9860001111', email:'dipak@gmail.com', route:'Dharan → Pokhara', date:'2025-07-15', seats:['14','15'], status:'Confirmed', notes:'', created: today },
-    { id:'BK004', name:'Mina Gurung', phone:'9801234567', email:'mina@gmail.com', route:'Itahari → Pokhara', date:'2025-07-17', seats:['SL1'], status:'Pending', notes:'Sleeper berth', created: today },
-    { id:'BK005', name:'Bikash KC', phone:'9812222333', email:'bikash@gmail.com', route:'Dharan → Pokhara', date:'2025-07-18', seats:['2'], status:'Cancelled', notes:'', created: today },
-  ];
-  saveData();
+// ─── JSONBin API ────────────────────────────────────────────────────────
+async function getBinId() {
+  if (cachedBinId) return cachedBinId;
+  const res = await fetch('https://api.jsonbin.io/v3/b', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Bin-Name': BIN_NAME, 'X-Bin-Private': 'true' },
+    body: JSON.stringify({ bookings: [] })
+  });
+  if (!res.ok) throw new Error('Cannot create bin');
+  const d = await res.json();
+  cachedBinId = d.metadata.id;
+  localStorage.setItem(BIN_ID_KEY, cachedBinId);
+  return cachedBinId;
 }
 
-// ─── NAV ──────────────────────────────────────────────────────────────
-function nav(page) {
+async function loadData() {
+  const id  = await getBinId();
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
+    headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }
+  });
+  if (!res.ok) throw new Error('Fetch failed');
+  const d = await res.json();
+  bookings = d.record.bookings || [];
+}
+
+async function saveData() {
+  const id = await getBinId();
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+    body: JSON.stringify({ bookings })
+  });
+  if (!res.ok) throw new Error('Save failed');
+}
+
+// ─── NAV ────────────────────────────────────────────────────────────────
+function nav(page, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('v-' + page).classList.add('active');
-  event.currentTarget.classList.add('active');
-  const titles = {dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',add:'Add Booking',settings:'Settings'};
-  const subs = {dashboard:'Overview',bookings:'All bookings',seatmap:'Live availability',revenue:'Financial summary',add:'New booking entry',settings:'System settings'};
+  if (el) el.classList.add('active');
+  const titles = { dashboard:'Dashboard', bookings:'Bookings', seatmap:'Seat Map', revenue:'Revenue', add:'Add Booking', settings:'Settings' };
+  const subs   = { dashboard:'Overview', bookings:'All bookings', seatmap:'Live availability', revenue:'Financial summary', add:'New booking entry', settings:'System settings' };
   document.getElementById('topbar-title').innerHTML = titles[page] + ' <span>' + subs[page] + '</span>';
-  const showSearch = ['bookings'].includes(page);
-  document.getElementById('search-bar').style.display = showSearch ? 'block' : 'none';
+  document.getElementById('search-bar').style.display = page === 'bookings' ? 'block' : 'none';
   if (page === 'bookings') renderBookings();
-  if (page === 'seatmap') { renderSeatMap(); document.getElementById('map-date').valueAsDate = new Date(); }
-  if (page === 'revenue') renderRevenue();
+  if (page === 'seatmap')  { document.getElementById('map-date').valueAsDate = new Date(); renderSeatMap(); }
+  if (page === 'revenue')  renderRevenue();
   if (page === 'dashboard') renderDashboard();
+  if (page === 'settings') document.getElementById('bin-id-display').textContent = 'Bin ID: ' + (cachedBinId || 'Not yet created');
 }
 
-// ─── RENDER HELPERS ───────────────────────────────────────────────────
+// ─── RENDER HELPERS ──────────────────────────────────────────────────────
 function statusBadge(s) {
-  const cls = s === 'Confirmed' ? 'b-conf' : s === 'Pending' ? 'b-pend' : 'b-canc';
+  const cls = s==='Confirmed'?'b-conf':s==='Pending'?'b-pend':'b-canc';
   return `<span class="badge ${cls}">${s}</span>`;
 }
 function fmtDate(d) {
-  if (!d) return '—';
-  try { return new Date(d).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}); } catch(e) { return d; }
+  try { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); } catch(e) { return d||'—'; }
 }
-function fmtSeats(arr) { return Array.isArray(arr) ? arr.join(', ') : arr; }
-function genRef() { return 'BK' + String(Date.now()).slice(-4).padStart(3,'0'); }
+function fmtSeats(a) { return Array.isArray(a) ? a.join(', ') : (a||'—'); }
 
-// ─── DASHBOARD ────────────────────────────────────────────────────────
+// ─── DASHBOARD ───────────────────────────────────────────────────────────
 function renderDashboard() {
   const today = new Date().toISOString().split('T')[0];
-  const conf = bookings.filter(b => b.status === 'Confirmed');
-  const pend = bookings.filter(b => b.status === 'Pending');
-  const canc = bookings.filter(b => b.status === 'Cancelled');
-  const rev = conf.reduce((s, b) => s + (b.seats.length * PRICE), 0);
-  const todayCount = bookings.filter(b => b.created === today).length;
-  document.getElementById('st-total').textContent = bookings.length;
-  document.getElementById('st-revenue').textContent = 'Rs. ' + rev.toLocaleString();
-  document.getElementById('st-pend').textContent = pend.length;
-  document.getElementById('st-canc').textContent = canc.length;
-  document.getElementById('st-today').textContent = todayCount + ' today';
-  const recent = [...bookings].reverse().slice(0, 8);
+  const conf  = bookings.filter(b => b.status==='Confirmed');
+  const pend  = bookings.filter(b => b.status==='Pending');
+  const canc  = bookings.filter(b => b.status==='Cancelled');
+  const rev   = conf.reduce((s,b) => s+(b.seats.length*PRICE), 0);
+  const todayN= bookings.filter(b => b.created===today).length;
+  document.getElementById('st-total').textContent   = bookings.length;
+  document.getElementById('st-revenue').textContent = 'Rs. '+rev.toLocaleString();
+  document.getElementById('st-pend').textContent    = pend.length;
+  document.getElementById('st-canc').textContent    = canc.length;
+  document.getElementById('st-today').textContent   = todayN+' today';
+  const recent = [...bookings].reverse().slice(0,8);
   document.getElementById('dash-tbody').innerHTML = recent.length ? recent.map(b => `
     <tr>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:600;">${b.id}</td>
       <td>${b.name}</td><td>${b.route}</td><td>${fmtDate(b.date)}</td>
       <td>${fmtSeats(b.seats)}</td>
-      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${(b.seats.length * PRICE).toLocaleString()}</td>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${(b.seats.length*PRICE).toLocaleString()}</td>
       <td>${statusBadge(b.status)}</td>
       <td><button class="act-btn" onclick="openDetail('${b.id}')">View</button></td>
-    </tr>`).join('') : '<tr><td colspan="8" class="empty"><div class="empty-icon">📭</div>No bookings yet</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No bookings yet</td></tr>';
 }
 
-// ─── BOOKINGS TABLE ───────────────────────────────────────────────────
+// ─── BOOKINGS TABLE ──────────────────────────────────────────────────────
 function renderBookings(filter, search) {
   let data = [...bookings];
-  if (filter && filter !== 'all') data = data.filter(b => b.status === filter);
-  if (search) { const q = search.toLowerCase(); data = data.filter(b => b.name.toLowerCase().includes(q) || b.phone.includes(q) || b.id.toLowerCase().includes(q) || b.route.toLowerCase().includes(q)); }
+  if (filter && filter!=='all') data = data.filter(b => b.status===filter);
+  else if (currentFilter!=='all') data = data.filter(b => b.status===currentFilter);
+  if (search) { const q=search.toLowerCase(); data=data.filter(b=>b.name.toLowerCase().includes(q)||b.phone.includes(q)||b.id.toLowerCase().includes(q)); }
   document.getElementById('bkg-tbody').innerHTML = data.length ? data.reverse().map(b => `
     <tr>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:600;">${b.id}</td>
       <td>${b.name}</td><td>${b.phone}</td><td>${b.route}</td>
       <td>${fmtDate(b.date)}</td><td>${fmtSeats(b.seats)}</td>
-      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${(b.seats.length * PRICE).toLocaleString()}</td>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${(b.seats.length*PRICE).toLocaleString()}</td>
       <td>${statusBadge(b.status)}</td>
       <td>
         <button class="act-btn" onclick="openDetail('${b.id}')">View</button>
-        ${b.status !== 'Confirmed' ? `<button class="act-btn" onclick="changeStatus('${b.id}','Confirmed')">✓</button>` : ''}
-        ${b.status !== 'Cancelled' ? `<button class="act-btn red" onclick="changeStatus('${b.id}','Cancelled')">✕</button>` : ''}
+        ${b.status!=='Confirmed'?`<button class="act-btn" onclick="changeStatus('${b.id}','Confirmed')">✓ Confirm</button>`:''}
+        ${b.status!=='Cancelled'?`<button class="act-btn red" onclick="changeStatus('${b.id}','Cancelled')">✕</button>`:''}
       </td>
-    </tr>`).join('') : '<tr><td colspan="9" class="empty"><div class="empty-icon">📭</div>No bookings found</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="9" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No bookings found</td></tr>';
 }
 
 function filterBkgs(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.tf').forEach(t => t.classList.remove('sel'));
-  el.classList.add('sel');
+  currentFilter=f;
+  document.querySelectorAll('.tf').forEach(t=>t.classList.remove('sel')); el.classList.add('sel');
   renderBookings(f, document.getElementById('search-bar').value);
 }
-function searchBookings() {
-  renderBookings(currentFilter, document.getElementById('search-bar').value);
-}
+function searchBookings() { renderBookings(currentFilter, document.getElementById('search-bar').value); }
 
-// ─── SEAT MAP ─────────────────────────────────────────────────────────
-function switchRoute(f, t, el) {
-  currentMapRoute = f + ' → ' + t;
-  document.querySelectorAll('.rt').forEach(r => r.classList.remove('sel'));
-  el.classList.add('sel');
+// ─── SEAT MAP ────────────────────────────────────────────────────────────
+function switchRoute(r, el) {
+  currentMapRoute=r;
+  document.querySelectorAll('.rt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel');
   renderSeatMap();
 }
 
 function renderSeatMap() {
   const mapDate = document.getElementById('map-date').value;
-  const routeBkgs = bookings.filter(b => b.route === currentMapRoute && (b.status === 'Confirmed' || b.status === 'Pending') && (!mapDate || b.date === mapDate));
-  const confSeats = new Set(), pendSeats = new Set();
-  routeBkgs.forEach(b => {
-    b.seats.forEach(s => {
-      if (b.status === 'Confirmed') confSeats.add(String(s));
-      else pendSeats.add(String(s));
-    });
+  const confSeats=new Set(), pendSeats=new Set();
+  bookings.forEach(b => {
+    if (b.route===currentMapRoute && (!mapDate||b.date===mapDate) && b.status!=='Cancelled') {
+      b.seats.forEach(s => { if(b.status==='Confirmed') confSeats.add(String(s)); else pendSeats.add(String(s)); });
+    }
   });
-  const body = document.getElementById('a-bus-body');
-  body.innerHTML = '';
-  const lCol = document.createElement('div'); lCol.className = 'a-col-l';
-  const aiCol = document.createElement('div'); aiCol.className = 'a-col-ai';
-  const aiLbl = document.createElement('div'); aiLbl.className = 'a-aisle-lbl'; aiLbl.textContent = 'AISLE'; aiCol.appendChild(aiLbl);
-  const rCol = document.createElement('div'); rCol.className = 'a-col-r';
-  for (let row = 0; row < 9; row++) {
-    const la = row * 2 + 1, lb = row * 2 + 2, rc = row + 19;
-    const pair = document.createElement('div'); pair.className = 'a-seat-pair';
-    pair.appendChild(makeAdminSeat(la, confSeats, pendSeats));
-    pair.appendChild(makeAdminSeat(lb, confSeats, pendSeats));
-    lCol.appendChild(pair);
-    rCol.appendChild(makeAdminSeat(rc, confSeats, pendSeats));
+  const body=document.getElementById('a-bus-body'); body.innerHTML='';
+  const lCol=document.createElement('div'); lCol.className='a-col-l';
+  const aiCol=document.createElement('div'); aiCol.className='a-col-ai';
+  const aiLbl=document.createElement('div'); aiLbl.className='a-aisle-lbl'; aiLbl.textContent='AISLE'; aiCol.appendChild(aiLbl);
+  const rCol=document.createElement('div'); rCol.className='a-col-r';
+  for(let row=0;row<9;row++){
+    const la=row*2+1, lb=row*2+2, rc=row+19;
+    const pair=document.createElement('div'); pair.className='a-seat-pair';
+    pair.appendChild(mkAdminSeat(la,confSeats,pendSeats)); pair.appendChild(mkAdminSeat(lb,confSeats,pendSeats));
+    lCol.appendChild(pair); rCol.appendChild(mkAdminSeat(rc,confSeats,pendSeats));
   }
   body.appendChild(lCol); body.appendChild(aiCol); body.appendChild(rCol);
-  const slRow = document.getElementById('a-sleeper-row'); slRow.innerHTML = '';
-  for (let s = 1; s <= 2; s++) {
-    const id = 'SL' + s;
-    const el = document.createElement('div');
-    const isCon = confSeats.has(id), isPend = pendSeats.has(id);
-    el.className = 'a-seat' + (isCon ? ' a-conf' : isPend ? '' : '');
-    if (isPend) { el.style.background='rgba(240,185,123,0.12)'; el.style.borderColor='rgba(240,185,123,0.35)'; el.style.color='#f0b97b'; }
-    el.style.flex = '1'; el.style.height = '44px'; el.style.flexDirection = 'column'; el.style.gap = '2px'; el.style.display = 'flex';
-    el.innerHTML = `<span style="font-size:13px">🛏</span><span>${id}</span>`;
-    el.onclick = () => showSeatInfo(id, confSeats, pendSeats, routeBkgs);
+  const slRow=document.getElementById('a-sleeper-row'); slRow.innerHTML='';
+  for(let s=1;s<=2;s++){
+    const id='SL'+s, el=document.createElement('div');
+    const isCon=confSeats.has(id), isPend=pendSeats.has(id);
+    el.className='a-seat'+(isCon?' a-conf':isPend?' a-pend':'');
+    el.style.cssText='flex:1;height:44px;flex-direction:column;gap:2px;display:flex;';
+    el.innerHTML=`<span style="font-size:13px">🛏</span><span>${id}</span>`;
+    el.onclick=()=>showSeatInfo(id,confSeats,pendSeats);
     slRow.appendChild(el);
   }
-  const tot = 29, conf = confSeats.size, pend = pendSeats.size;
-  document.getElementById('sm-total').textContent = tot;
-  document.getElementById('sm-conf').textContent = conf;
-  document.getElementById('sm-pend').textContent = pend;
-  document.getElementById('sm-avail').textContent = tot - conf - pend;
+  const tot=29, conf=confSeats.size, pend=pendSeats.size;
+  document.getElementById('sm-conf').textContent=conf;
+  document.getElementById('sm-pend').textContent=pend;
+  document.getElementById('sm-avail').textContent=tot-conf-pend;
 }
 
-function makeAdminSeat(id, confSeats, pendSeats) {
-  const el = document.createElement('div');
-  const sid = String(id), isCon = confSeats.has(sid), isPend = pendSeats.has(sid);
-  el.className = 'a-seat' + (isCon ? ' a-conf' : '');
-  if (isPend) { el.style.background='rgba(240,185,123,0.12)'; el.style.borderColor='rgba(240,185,123,0.35)'; el.style.color='#f0b97b'; }
-  el.textContent = id;
-  el.onclick = () => showSeatInfo(sid, confSeats, pendSeats, bookings.filter(b => b.route === currentMapRoute));
+function mkAdminSeat(id,confSeats,pendSeats){
+  const el=document.createElement('div');
+  const sid=String(id), isCon=confSeats.has(sid), isPend=pendSeats.has(sid);
+  el.className='a-seat'+(isCon?' a-conf':isPend?' a-pend':'');
+  el.textContent=id;
+  el.onclick=()=>showSeatInfo(sid,confSeats,pendSeats);
   return el;
 }
 
-function showSeatInfo(sid, confSeats, pendSeats, routeBkgs) {
-  const bkg = routeBkgs.find(b => b.seats.map(String).includes(sid));
-  const card = document.getElementById('seat-info-card');
-  if (!bkg) {
-    card.innerHTML = `<div class="smd-title">Seat ${sid}</div><div style="font-size:12px;color:#4dd97a;">✓ Available</div>`;
-    return;
-  }
-  card.innerHTML = `<div class="smd-title">Seat ${sid} — ${bkg.status}</div>
+function showSeatInfo(sid,confSeats,pendSeats){
+  const bkg=bookings.find(b=>b.seats.map(String).includes(sid)&&b.status!=='Cancelled'&&b.route===currentMapRoute);
+  const card=document.getElementById('seat-info-card');
+  if(!bkg){ card.innerHTML=`<div class="smd-title">Seat ${sid}</div><div style="font-size:12px;color:#4dd97a;">✓ Available</div>`; return; }
+  card.innerHTML=`<div class="smd-title">Seat ${sid} — ${bkg.status}</div>
     <div class="smd-row"><span>Passenger</span><span>${bkg.name}</span></div>
     <div class="smd-row"><span>Phone</span><span>${bkg.phone}</span></div>
     <div class="smd-row"><span>Date</span><span>${fmtDate(bkg.date)}</span></div>
     <div class="smd-row"><span>All Seats</span><span>${fmtSeats(bkg.seats)}</span></div>
     <div class="smd-row"><span>Ref</span><span style="color:#4dd97a;">${bkg.id}</span></div>
-    <div style="margin-top:8px;display:flex;gap:6px;">
-      <button class="act-btn" onclick="openDetail('${bkg.id}')">Full Details</button>
-    </div>`;
+    <div style="margin-top:8px;"><button class="act-btn" onclick="openDetail('${bkg.id}')">Full Details</button></div>`;
 }
 
-// ─── REVENUE ──────────────────────────────────────────────────────────
-function renderRevenue() {
-  const conf = bookings.filter(b => b.status === 'Confirmed');
-  const pend = bookings.filter(b => b.status === 'Pending');
-  const totalRev = conf.reduce((s, b) => s + b.seats.length * PRICE, 0);
-  const pendRev = pend.reduce((s, b) => s + b.seats.length * PRICE, 0);
-  const seatsSold = conf.reduce((s, b) => s + b.seats.length, 0);
-  document.getElementById('rv-total').textContent = 'Rs. ' + totalRev.toLocaleString();
-  document.getElementById('rv-avg').textContent = conf.length ? 'Rs. ' + Math.round(totalRev / conf.length).toLocaleString() : 'Rs. 0';
-  document.getElementById('rv-seats').textContent = seatsSold;
-  document.getElementById('rv-pend').textContent = 'Rs. ' + pendRev.toLocaleString();
-  const routes = ['Dharan → Pokhara', 'Pokhara → Dharan', 'Itahari → Pokhara'];
-  const maxRev = Math.max(...routes.map(r => conf.filter(b => b.route === r).reduce((s, b) => s + b.seats.length * PRICE, 0)), 1);
-  document.getElementById('rev-bars').innerHTML = routes.map(r => {
-    const rv = conf.filter(b => b.route === r).reduce((s, b) => s + b.seats.length * PRICE, 0);
-    const pct = Math.round(rv / maxRev * 100);
-    const short = r.replace(' → ', '→').replace('Pokhara','PKR').replace('Dharan','DHR').replace('Itahari','ITA');
-    return `<div class="rbar-row">
-      <div class="rbar-lbl">${short}</div>
-      <div class="rbar-track"><div class="rbar-fill" style="width:${pct}%"></div></div>
-      <div class="rbar-val">Rs. ${(rv/1000).toFixed(1)}k</div>
-    </div>`;
+// ─── REVENUE ─────────────────────────────────────────────────────────────
+function renderRevenue(){
+  const conf=bookings.filter(b=>b.status==='Confirmed');
+  const pend=bookings.filter(b=>b.status==='Pending');
+  const totalRev=conf.reduce((s,b)=>s+b.seats.length*PRICE,0);
+  const pendRev=pend.reduce((s,b)=>s+b.seats.length*PRICE,0);
+  const seatsSold=conf.reduce((s,b)=>s+b.seats.length,0);
+  document.getElementById('rv-total').textContent='Rs. '+totalRev.toLocaleString();
+  document.getElementById('rv-avg').textContent=conf.length?'Rs. '+Math.round(totalRev/conf.length).toLocaleString():'Rs. 0';
+  document.getElementById('rv-seats').textContent=seatsSold;
+  document.getElementById('rv-pend').textContent='Rs. '+pendRev.toLocaleString();
+  const routes=['Dharan → Pokhara','Pokhara → Dharan','Itahari → Pokhara'];
+  const maxRev=Math.max(...routes.map(r=>conf.filter(b=>b.route===r).reduce((s,b)=>s+b.seats.length*PRICE,0)),1);
+  document.getElementById('rev-bars').innerHTML=routes.map(r=>{
+    const rv=conf.filter(b=>b.route===r).reduce((s,b)=>s+b.seats.length*PRICE,0);
+    const pct=Math.round(rv/maxRev*100);
+    const short=r.replace(' → ','→').replace('Pokhara','PKR').replace('Dharan','DHR').replace('Itahari','ITA');
+    return `<div class="rbar-row"><div class="rbar-lbl">${short}</div><div class="rbar-track"><div class="rbar-fill" style="width:${pct}%"></div></div><div class="rbar-val">Rs.${(rv/1000).toFixed(1)}k</div></div>`;
   }).join('');
 }
 
-// ─── DETAIL MODAL ─────────────────────────────────────────────────────
-function openDetail(id) {
-  const b = bookings.find(x => x.id === id);
-  if (!b) return;
-  document.getElementById('modal-title').textContent = 'Booking ' + b.id;
-  document.getElementById('modal-body').innerHTML = `
+// ─── DETAIL MODAL ─────────────────────────────────────────────────────────
+function openDetail(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  document.getElementById('modal-title').textContent='Booking '+b.id;
+  document.getElementById('modal-body').innerHTML=`
     <div class="m-row"><span>Passenger</span><span>${b.name}</span></div>
     <div class="m-row"><span>Phone</span><span>${b.phone}</span></div>
-    <div class="m-row"><span>Email</span><span>${b.email}</span></div>
+    <div class="m-row"><span>Email</span><span>${b.email||'—'}</span></div>
     <div class="m-row"><span>Route</span><span>${b.route}</span></div>
     <div class="m-row"><span>Date</span><span>${fmtDate(b.date)}</span></div>
     <div class="m-row"><span>Seats</span><span>${fmtSeats(b.seats)}</span></div>
-    <div class="m-row"><span>Total</span><span style="color:#4dd97a;font-family:Rajdhani,sans-serif;font-weight:700;">Rs. ${(b.seats.length * PRICE).toLocaleString()}</span></div>
+    <div class="m-row"><span>Total</span><span style="color:#4dd97a;font-family:Rajdhani,sans-serif;font-weight:700;">Rs. ${(b.seats.length*PRICE).toLocaleString()}</span></div>
     <div class="m-row"><span>Status</span><span>${statusBadge(b.status)}</span></div>
-    ${b.notes ? `<div class="m-row"><span>Notes</span><span>${b.notes}</span></div>` : ''}
+    ${b.notes?`<div class="m-row"><span>Notes</span><span>${b.notes}</span></div>`:''}
   `;
-  const btns = document.getElementById('modal-btns');
-  btns.innerHTML = '';
-  if (b.status !== 'Confirmed') { const bn = document.createElement('button'); bn.className='m-btn m-btn-green'; bn.textContent='Confirm'; bn.onclick=()=>{changeStatus(id,'Confirmed');closeDetail();}; btns.appendChild(bn); }
-  if (b.status !== 'Cancelled') { const bn = document.createElement('button'); bn.className='m-btn m-btn-red'; bn.textContent='Cancel'; bn.onclick=()=>{changeStatus(id,'Cancelled');closeDetail();}; btns.appendChild(bn); }
-  const cl = document.createElement('button'); cl.className='m-btn m-btn-ghost'; cl.textContent='Close'; cl.onclick=closeDetail; btns.appendChild(cl);
+  const btns=document.getElementById('modal-btns'); btns.innerHTML='';
+  if(b.status!=='Confirmed'){const bn=document.createElement('button');bn.className='m-btn m-btn-green';bn.textContent='Confirm';bn.onclick=()=>{changeStatus(id,'Confirmed');closeDetail();};btns.appendChild(bn);}
+  if(b.status!=='Cancelled'){const bn=document.createElement('button');bn.className='m-btn m-btn-red';bn.textContent='Cancel';bn.onclick=()=>{changeStatus(id,'Cancelled');closeDetail();};btns.appendChild(bn);}
+  const cl=document.createElement('button');cl.className='m-btn m-btn-ghost';cl.textContent='Close';cl.onclick=closeDetail;btns.appendChild(cl);
   document.getElementById('detail-modal').classList.add('open');
 }
-function closeDetail() { document.getElementById('detail-modal').classList.remove('open'); }
-document.getElementById('detail-modal').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
+function closeDetail(){ document.getElementById('detail-modal').classList.remove('open'); }
+document.getElementById('detail-modal').addEventListener('click',function(e){ if(e.target===this) closeDetail(); });
 
-// ─── CHANGE STATUS ────────────────────────────────────────────────────
-function changeStatus(id, status) {
-  const b = bookings.find(x => x.id === id);
-  if (b) { b.status = status; saveData(); refreshAll(); showToast('Booking ' + id + ' marked ' + status); }
+// ─── CHANGE STATUS ────────────────────────────────────────────────────────
+async function changeStatus(id,status){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  b.status=status;
+  showToast('Saving…');
+  try { await saveData(); showToast('Booking '+id+' marked '+status); refreshAll(); }
+  catch(e){ showToast('Save error — try again'); }
 }
 
-// ─── ADD BOOKING (page) ───────────────────────────────────────────────
-function addBooking() {
-  const name = document.getElementById('a-name').value.trim();
-  const phone = document.getElementById('a-phone').value.trim();
-  const email = document.getElementById('a-email').value.trim();
-  const route = document.getElementById('a-route').value;
-  const date = document.getElementById('a-date').value;
-  const seats = document.getElementById('a-seats').value.split(',').map(s => s.trim()).filter(Boolean);
-  const status = document.getElementById('a-status').value;
-  const notes = document.getElementById('a-notes').value.trim();
-  const err = document.getElementById('add-err');
-  if (!name || !phone || !date || !seats.length) { err.textContent = 'Please fill Name, Phone, Date and Seats.'; err.style.display = 'block'; return; }
-  err.style.display = 'none';
-  bookings.push({ id: 'BK' + String(Date.now()).slice(-5), name, phone, email, route, date, seats, status, notes, created: new Date().toISOString().split('T')[0] });
-  saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!');
+// ─── ADD BOOKING ──────────────────────────────────────────────────────────
+async function addBooking(){
+  const name=document.getElementById('a-name').value.trim();
+  const phone=document.getElementById('a-phone').value.trim();
+  const email=document.getElementById('a-email').value.trim();
+  const route=document.getElementById('a-route').value;
+  const date=document.getElementById('a-date').value;
+  const seats=document.getElementById('a-seats').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const status=document.getElementById('a-status').value;
+  const notes=document.getElementById('a-notes').value.trim();
+  const err=document.getElementById('add-err');
+  if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
+  err.style.display='none';
+  bookings.push({ id:'BK'+String(Date.now()).slice(-5), name, phone, email, route, date, seats, status, notes, created:new Date().toISOString().split('T')[0] });
+  try { await saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!'); }
+  catch(e){ showToast('Save error'); }
 }
-function clearAddForm() {
-  ['a-name','a-phone','a-email','a-date','a-seats','a-notes'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('add-err').style.display = 'none';
+function clearAddForm(){ ['a-name','a-phone','a-email','a-date','a-seats','a-notes'].forEach(id=>document.getElementById(id).value=''); document.getElementById('add-err').style.display='none'; }
+
+// ─── QUICK ADD MODAL ──────────────────────────────────────────────────────
+function openAddModal(){ document.getElementById('add-modal').classList.add('open'); }
+function closeAddModal(){ document.getElementById('add-modal').classList.remove('open'); }
+document.getElementById('add-modal').addEventListener('click',function(e){ if(e.target===this) closeAddModal(); });
+async function saveModalBooking(){
+  const name=document.getElementById('m-name').value.trim();
+  const phone=document.getElementById('m-phone').value.trim();
+  const email=document.getElementById('m-email').value.trim();
+  const route=document.getElementById('m-route').value;
+  const date=document.getElementById('m-date').value;
+  const seats=document.getElementById('m-seats').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const status=document.getElementById('m-status').value;
+  const notes=document.getElementById('m-notes').value.trim();
+  const err=document.getElementById('m-err');
+  if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
+  err.style.display='none';
+  bookings.push({ id:'BK'+String(Date.now()).slice(-5), name, phone, email, route, date, seats, status, notes, created:new Date().toISOString().split('T')[0] });
+  try {
+    await saveData();
+    ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id=>document.getElementById(id).value='');
+    closeAddModal(); refreshAll(); showToast('Booking added!');
+  } catch(e){ showToast('Save error'); }
 }
 
-// ─── QUICK ADD MODAL ──────────────────────────────────────────────────
-function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
-function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
-document.getElementById('add-modal').addEventListener('click', function(e) { if (e.target === this) closeAddModal(); });
-function saveModalBooking() {
-  const name = document.getElementById('m-name').value.trim();
-  const phone = document.getElementById('m-phone').value.trim();
-  const email = document.getElementById('m-email').value.trim();
-  const route = document.getElementById('m-route').value;
-  const date = document.getElementById('m-date').value;
-  const seats = document.getElementById('m-seats').value.split(',').map(s => s.trim()).filter(Boolean);
-  const status = document.getElementById('m-status').value;
-  const notes = document.getElementById('m-notes').value.trim();
-  const err = document.getElementById('m-err');
-  if (!name || !phone || !date || !seats.length) { err.textContent = 'Please fill Name, Phone, Date and Seats.'; err.style.display = 'block'; return; }
-  err.style.display = 'none';
-  bookings.push({ id: 'BK' + String(Date.now()).slice(-5), name, phone, email, route, date, seats, status, notes, created: new Date().toISOString().split('T')[0] });
-  saveData(); ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id => document.getElementById(id).value='');
-  closeAddModal(); refreshAll(); showToast('Booking added!');
-}
-
-// ─── EXPORT CSV ───────────────────────────────────────────────────────
-function exportCSV() {
-  const h = ['Ref','Name','Phone','Email','Route','Date','Seats','Total','Status','Notes'];
-  const rows = bookings.map(b => [b.id, b.name, b.phone, b.email, b.route, b.date, fmtSeats(b.seats), 'Rs. ' + (b.seats.length * PRICE), b.status, b.notes || ''].map(v => `"${v}"`).join(','));
-  const csv = [h.join(','), ...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-  a.download = 'sambriddhi_bookings.csv';
-  a.click();
+// ─── EXPORT CSV ───────────────────────────────────────────────────────────
+function exportCSV(){
+  const h=['Ref','Name','Phone','Email','Route','Date','Seats','Total','Status','Notes'];
+  const rows=bookings.map(b=>[b.id,b.name,b.phone,b.email||'',b.route,b.date,fmtSeats(b.seats),'Rs. '+(b.seats.length*PRICE),b.status,b.notes||''].map(v=>`"${v}"`).join(','));
+  const csv=[h.join(','),...rows].join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='sambriddhi_bookings.csv'; a.click();
   showToast('CSV exported!');
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+async function clearAllBookings(){
+  if(!confirm('Clear ALL bookings from the database? This cannot be undone.')) return;
+  bookings=[];
+  try { await saveData(); refreshAll(); showToast('All bookings cleared.'); }
+  catch(e){ showToast('Error clearing'); }
 }
 
-// ─── REFRESH ALL ──────────────────────────────────────────────────────
-function refreshAll() {
-  const active = document.querySelector('.view.active');
-  if (!active) return;
-  const id = active.id;
-  if (id === 'v-dashboard') renderDashboard();
-  if (id === 'v-bookings') renderBookings(currentFilter, document.getElementById('search-bar').value);
-  if (id === 'v-seatmap') renderSeatMap();
-  if (id === 'v-revenue') renderRevenue();
+async function refreshData(){
+  showToast('Refreshing…');
+  try { await loadData(); refreshAll(); showToast('Data refreshed!'); }
+  catch(e){ showToast('Refresh failed'); }
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────
-loadData();
-renderDashboard();
-document.getElementById('map-date').valueAsDate = new Date();
+// ─── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ─── REFRESH ALL ──────────────────────────────────────────────────────────
+function refreshAll(){
+  const active=document.querySelector('.view.active'); if(!active) return;
+  const id=active.id;
+  if(id==='v-dashboard') renderDashboard();
+  if(id==='v-bookings')  renderBookings();
+  if(id==='v-seatmap')   renderSeatMap();
+  if(id==='v-revenue')   renderRevenue();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+(async function init(){
+  try {
+    document.getElementById('pl-msg').textContent = 'Connecting to database…';
+    await loadData();
+    document.getElementById('page-load').style.display='none';
+    renderDashboard();
+    document.getElementById('map-date').valueAsDate=new Date();
+  } catch(e) {
+    document.getElementById('pl-msg').textContent = 'Connection failed. Check your internet and refresh.';
+    document.getElementById('pl-msg').style.color = '#f0997b';
+  }
+})();
 </script>
 </body>
 </html>
