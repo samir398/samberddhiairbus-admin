@@ -122,12 +122,14 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .mrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(45,189,85,0.07);font-size:13px;}
 .mrow:last-child{border-bottom:none;}
 .mrow span:first-child{color:rgba(255,255,255,0.38);}
-.modal-btns{display:flex;gap:8px;margin-top:16px;}
-.m-btn{flex:1;padding:10px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;}
+.modal-btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.m-btn{flex:1;padding:10px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;min-width:100px;}
 .m-btn-g{background:#22913f;color:#fff;}.m-btn-g:hover{background:#2dbd55;}
 .m-btn-r{background:rgba(240,153,123,0.15);border:1px solid rgba(240,153,123,0.3);color:#f0997b;}.m-btn-r:hover{background:rgba(240,153,123,0.25);}
 .m-btn-o{background:rgba(200,100,0,0.2);border:1px solid rgba(200,130,0,0.35);color:#f0a030;}.m-btn-o:hover{background:rgba(200,100,0,0.35);}
 .m-btn-x{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);}.m-btn-x:hover{color:#fff;}
+.m-btn-b{background:rgba(37,140,255,0.15);border:1px solid rgba(37,140,255,0.35);color:#5aa9ff;}.m-btn-b:hover{background:rgba(37,140,255,0.28);}
+.m-btn-w{background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.35);color:#25d366;}.m-btn-w:hover{background:rgba(37,211,102,0.28);}
 /* Reserve modal form */
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
 .fg label{font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.38);}
@@ -175,8 +177,13 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 <body>
 
 <div class="pgload" id="pgload">
-  <div class="pgspin"></div>
+  <div class="pgspin" id="pgspin"></div>
   <div class="pg-txt" id="pg-msg">Connecting to database…</div>
+  <div id="pg-detail" style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:10px;max-width:420px;text-align:center;font-family:Nunito,sans-serif;letter-spacing:0;display:none;"></div>
+  <div id="pg-actions" style="margin-top:16px;display:none;gap:10px;">
+    <button class="tb-btn" onclick="retryConnect()">↺ Retry</button>
+    <button class="tb-btn danger" onclick="continueOffline()">Continue without database</button>
+  </div>
 </div>
 
 <div class="sidebar">
@@ -192,11 +199,12 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="nav-item" onclick="nav('seatmap',this)"><span class="ni">🚌</span> Seat Map</div>
     <div class="nav-sec">Management</div>
     <div class="nav-item" onclick="nav('revenue',this)"><span class="ni">💰</span> Revenue</div>
+    <div class="nav-item" onclick="nav('report',this)"><span class="ni">🧾</span> Daily Report</div>
     <div class="nav-item" onclick="nav('add',this)"><span class="ni">➕</span> Add Booking</div>
     <div class="nav-sec">System</div>
     <div class="nav-item" onclick="nav('settings',this)"><span class="ni">⚙️</span> Settings</div>
   </div>
-  <div class="sb-foot">Sambriddhi Air Bus v2.0<br>Admin: Samir Ghimire</div>
+  <div class="sb-foot">Sambriddhi Air Bus v2.1<br>Admin: Samir Ghimire</div>
 </div>
 
 <div class="main">
@@ -320,6 +328,34 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       </div>
     </div>
 
+    <!-- DAILY REPORT -->
+    <div class="view" id="v-report">
+      <div class="tcard" style="padding:20px;margin-bottom:16px;">
+        <div class="thead-title" style="margin-bottom:14px;">Daily Customer Report</div>
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+          <div class="fg" style="margin-bottom:0;">
+            <label>Date</label>
+            <input type="date" id="rep-date" onchange="renderReportPreview()">
+          </div>
+          <div class="fg" style="margin-bottom:0;">
+            <label>Include</label>
+            <select id="rep-filter" onchange="renderReportPreview()">
+              <option value="active">All except Cancelled</option>
+              <option value="Confirmed">Confirmed only</option>
+              <option value="all">Everything (incl. Cancelled)</option>
+            </select>
+          </div>
+          <button class="m-btn m-btn-g" style="max-width:200px;" onclick="downloadDailyPDF()">⬇ Download PDF</button>
+          <button class="m-btn m-btn-r" style="max-width:200px;" onclick="clearDay()">🗑 Clear This Day</button>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="thead"><div class="thead-title">Preview</div><div id="rep-summary" style="font-size:12px;color:rgba(255,255,255,0.4);font-family:Rajdhani,sans-serif;"></div></div>
+        <table><thead><tr><th>Ref</th><th>Passenger</th><th>Phone</th><th>Route</th><th>Seats</th><th>Total</th><th>Status</th><th>Notify</th></tr></thead>
+        <tbody id="rep-tbody"></tbody></table>
+      </div>
+    </div>
+
     <!-- ADD BOOKING -->
     <div class="view" id="v-add">
       <div class="tcard" style="padding:20px;">
@@ -351,13 +387,19 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       <div class="sc">
         <div class="sc-title">General</div>
         <div class="srow"><div><div class="srow-lbl">Price per Seat</div></div><input type="number" value="2500" id="cfg-price" style="width:90px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
-        <div class="srow"><div><div class="srow-lbl">Owner Email</div></div><input type="email" value="sambriddhiairbus@gmail.com" style="width:240px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
+      </div>
+      <div class="sc">
+        <div class="sc-title">Notifications</div>
+        <div class="srow-sub" style="margin-bottom:10px;">These control where the "📧 Email" and "💬 WhatsApp" buttons on each booking send to. Browsers can't send email/WhatsApp silently in the background — these buttons open a pre-filled message for you to send with one tap.</div>
+        <div class="srow"><div><div class="srow-lbl">Notify Email</div></div><input type="email" value="samirtsg9@gmail.com" id="cfg-email" style="width:240px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
+        <div class="srow"><div><div class="srow-lbl">Notify WhatsApp</div><div class="srow-sub">Enter with country code, no + or spaces (Nepal = 977)</div></div><input type="text" value="9779763255296" id="cfg-whatsapp" style="width:160px;background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 8px;font-size:13px;color:#fff;font-family:Nunito,sans-serif;outline:none;"></div>
+        <div style="margin-top:10px;"><button class="tb-btn" onclick="saveNotifyConfig()">Save Notification Settings</button></div>
       </div>
       <div class="sc">
         <div class="sc-title">Data</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <button class="tb-btn" onclick="exportCSV()">⬇ Export CSV</button>
-          <button class="tb-btn danger" onclick="clearAll()">🗑 Clear All Bookings</button>
+          <button class="tb-btn danger" onclick="clearAll()">🗑 Clear All Bookings (Full History)</button>
         </div>
       </div>
     </div>
@@ -414,12 +456,15 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
 // ═══════════════════════════════════════════
-const PRICE      = 2500;
+let PRICE      = 2500;
 const MASTER_KEY = '$2a$10$lM8iv375PzNB9kY.0H2Pn.R/2MzTafbZ8gtWgCHIGvMsw2np8NC7K';
 const ACCESS_KEY = '$2a$10$Rq9teSheNL0xRMq7e0qB6.YGsp.L.Ql9fBpInwnRK9Km2UmYr1JNy';
 const BIN_ID_KEY = 'sambriddhi_bin_id';
+const NOTIFY_KEY = 'sambriddhi_notify_cfg';
 // ═══════════════════════════════════════════
 
 let bookings        = [];
@@ -428,6 +473,23 @@ let curFilter       = 'all';
 let curMapRoute     = 'Dharan → Pokhara';
 let clickMode       = 'reserve'; // 'reserve' | 'free' | 'view'
 let pendingReserve  = null; // { seatId, date, route }
+
+// Notification config (email / whatsapp the "📧" and "💬" buttons target)
+let NOTIFY = { email: 'samirtsg9@gmail.com', whatsapp: '9779763255296' };
+(function loadNotifyConfig(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(NOTIFY_KEY) || 'null');
+    if(saved && saved.email) NOTIFY = saved;
+  }catch(e){}
+})();
+function saveNotifyConfig(){
+  const email = document.getElementById('cfg-email').value.trim();
+  const wa = document.getElementById('cfg-whatsapp').value.trim().replace(/[^0-9]/g,'');
+  if(!email){ showToast('Enter a valid email'); return; }
+  NOTIFY = { email, whatsapp: wa };
+  localStorage.setItem(NOTIFY_KEY, JSON.stringify(NOTIFY));
+  showToast('Notification settings saved!');
+}
 
 // ── JSONBin ──────────────────────────────────────────────────
 async function getBinId(){
@@ -453,15 +515,16 @@ function nav(page,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('v-'+page).classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',add:'Add Booking',settings:'Settings'};
-  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Click seats to reserve or free them',revenue:'Financial summary',add:'New booking entry',settings:'System settings'};
+  const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',settings:'Settings'};
+  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Click seats to reserve or free them',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',settings:'System settings'};
   document.getElementById('topbar-title').innerHTML=titles[page]+' <span>'+subs[page]+'</span>';
   document.getElementById('search-bar').style.display=page==='bookings'?'block':'none';
   if(page==='dashboard') renderDashboard();
   if(page==='bookings')  renderBookings();
   if(page==='seatmap')   { document.getElementById('map-date').valueAsDate=new Date(); renderSeatMap(); }
   if(page==='revenue')   renderRevenue();
-  if(page==='settings')  document.getElementById('bin-disp').textContent='Bin ID: '+(cachedBinId||'Not created');
+  if(page==='report')    { if(!document.getElementById('rep-date').value) document.getElementById('rep-date').valueAsDate=new Date(); renderReportPreview(); }
+  if(page==='settings')  { document.getElementById('bin-disp').textContent='Bin ID: '+(cachedBinId||'Not created'); document.getElementById('cfg-email').value=NOTIFY.email; document.getElementById('cfg-whatsapp').value=NOTIFY.whatsapp; }
 }
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -471,6 +534,23 @@ function statusBadge(s){
   const m={Confirmed:'bc',Pending:'bp',Cancelled:'bx',AdminReserved:'ba'};
   const lbl={AdminReserved:'Reserved'};
   return `<span class="badge ${m[s]||'bp'}">${lbl[s]||s}</span>`;
+}
+
+// ── Notify helpers (Email / WhatsApp quick-send) ───────────────
+function bookingSummaryText(b){
+  return `Sambriddhi Air Bus Booking\nRef: ${b.id}\nName: ${b.name}\nPhone: ${b.phone||'—'}\nRoute: ${b.route}\nDate: ${fmtDate(b.date)}\nSeats: ${fmtSeats(b.seats)}\nTotal: Rs. ${(b.seats.length*PRICE).toLocaleString()}\nStatus: ${b.status}${b.notes?('\nNotes: '+b.notes):''}`;
+}
+function notifyEmail(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  const subject=encodeURIComponent('Booking '+b.id+' — '+b.name+' ('+b.status+')');
+  const body=encodeURIComponent(bookingSummaryText(b));
+  window.open(`mailto:${NOTIFY.email}?subject=${subject}&body=${body}`,'_blank');
+}
+function notifyWhatsapp(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  const text=encodeURIComponent(bookingSummaryText(b));
+  const num=(NOTIFY.whatsapp||'').replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${num}?text=${text}`,'_blank');
 }
 
 // ── Dashboard ─────────────────────────────────────────────────
@@ -515,6 +595,8 @@ function renderBookings(filter,search){
         <button class="act-btn" onclick="openDetail('${b.id}')">View</button>
         ${b.status!=='Confirmed'&&b.status!=='AdminReserved'?`<button class="act-btn" onclick="changeStatus('${b.id}','Confirmed')">✓</button>`:''}
         ${b.status!=='Cancelled'?`<button class="act-btn red" onclick="changeStatus('${b.id}','Cancelled')">✕</button>`:''}
+        <button class="act-btn" title="Email this booking" onclick="notifyEmail('${b.id}')">📧</button>
+        <button class="act-btn" title="WhatsApp this booking" onclick="notifyWhatsapp('${b.id}')">💬</button>
       </td>
     </tr>`).join(''):'<tr><td colspan="9" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No bookings found</td></tr>';
 }
@@ -625,8 +707,9 @@ async function confirmReserve(){
   document.getElementById('r-err').style.display='none';
   closeReserveModal();
   showToast('Reserving seat…');
+  const newId='ADM'+String(Date.now()).slice(-5);
   bookings.push({
-    id:'ADM'+String(Date.now()).slice(-5),
+    id:newId,
     name,phone:phone||'—',email:'',
     route:pendingReserve.route,date:pendingReserve.date,
     seats:[pendingReserve.seatId],
@@ -664,8 +747,10 @@ function showSeatInfo(sid){
     <div class="ic-row"><span>All Seats</span><span>${fmtSeats(bkg.seats)}</span></div>
     <div class="ic-row"><span>Ref</span><span style="color:#4dd97a;">${bkg.id}</span></div>
     ${bkg.notes?`<div class="ic-row"><span>Notes</span><span>${bkg.notes}</span></div>`:''}
-    <div style="margin-top:8px;display:flex;gap:6px;">
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
       <button class="act-btn" onclick="openDetail('${bkg.id}')">Full Detail</button>
+      <button class="act-btn" onclick="notifyEmail('${bkg.id}')">📧</button>
+      <button class="act-btn" onclick="notifyWhatsapp('${bkg.id}')">💬</button>
       ${isAdmin?`<button class="act-btn red" onclick="freeSeat('${sid}','${document.getElementById('map-date').value}')">Release Seat</button>`:''}
     </div>`;
 }
@@ -690,6 +775,71 @@ function renderRevenue(){
   }).join('');
 }
 
+// ── Daily Report (PDF) ─────────────────────────────────────────
+function getReportData(){
+  const date=document.getElementById('rep-date').value;
+  const mode=document.getElementById('rep-filter').value;
+  let data=bookings.filter(b=>b.date===date);
+  if(mode==='active') data=data.filter(b=>b.status!=='Cancelled');
+  else if(mode==='Confirmed') data=data.filter(b=>b.status==='Confirmed');
+  return { date, data };
+}
+function renderReportPreview(){
+  const { date, data } = getReportData();
+  document.getElementById('rep-tbody').innerHTML=data.length?data.map(b=>`
+    <tr>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:600;">${b.id}</td>
+      <td>${b.name}</td><td>${b.phone||'—'}</td><td>${b.route}</td>
+      <td>${fmtSeats(b.seats)}</td>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${(b.seats.length*PRICE).toLocaleString()}</td>
+      <td>${statusBadge(b.status)}</td>
+      <td><button class="act-btn" onclick="notifyEmail('${b.id}')">📧</button><button class="act-btn" onclick="notifyWhatsapp('${b.id}')">💬</button></td>
+    </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No bookings for this date</td></tr>';
+  const seats=data.reduce((s,b)=>s+b.seats.length,0);
+  const rev=data.filter(b=>b.status==='Confirmed').reduce((s,b)=>s+b.seats.length*PRICE,0);
+  document.getElementById('rep-summary').textContent=date?`${data.length} bookings · ${seats} seats · Rs. ${rev.toLocaleString()} confirmed revenue`:'';
+}
+function downloadDailyPDF(){
+  const { date, data } = getReportData();
+  if(!date){ showToast('Pick a date first'); return; }
+  if(!data.length){ showToast('No bookings for this date'); return; }
+  if(!window.jspdf){ showToast('PDF library failed to load — check your internet connection'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text('Sambriddhi Air Bus — Daily Customer Report',14,16);
+  doc.setFontSize(10);
+  doc.setTextColor(90);
+  doc.text('Travel Date: '+fmtDate(date)+'   |   Generated: '+new Date().toLocaleString(),14,23);
+  doc.autoTable({
+    startY:28,
+    head:[['Ref','Name','Phone','Route','Seats','Total (Rs.)','Status']],
+    body:data.map(b=>[b.id,b.name,b.phone||'—',b.route,fmtSeats(b.seats),(b.seats.length*PRICE).toLocaleString(),b.status==='AdminReserved'?'Reserved':b.status]),
+    styles:{fontSize:9,cellPadding:3},
+    headStyles:{fillColor:[34,145,63],textColor:255},
+    alternateRowStyles:{fillColor:[245,250,246]}
+  });
+  const totalSeats=data.reduce((s,b)=>s+b.seats.length,0);
+  const totalRev=data.filter(b=>b.status==='Confirmed').reduce((s,b)=>s+b.seats.length*PRICE,0);
+  const finalY=doc.lastAutoTable.finalY+10;
+  doc.setFontSize(11);
+  doc.setTextColor(0);
+  doc.text('Total Passengers: '+totalSeats,14,finalY);
+  doc.text('Confirmed Revenue: Rs. '+totalRev.toLocaleString(),14,finalY+7);
+  doc.save('sambriddhi_customers_'+date+'.pdf');
+  showToast('PDF downloaded!');
+}
+async function clearDay(){
+  const { date, data } = getReportData();
+  if(!date){ showToast('Pick a date first'); return; }
+  if(!data.length){ showToast('No bookings for this date'); return; }
+  if(!confirm('Delete all '+data.length+' booking(s) on '+fmtDate(date)+'? This cannot be undone.')) return;
+  const idsToRemove=new Set(data.map(b=>b.id));
+  bookings=bookings.filter(b=>!idsToRemove.has(b.id));
+  try{ await saveData(); renderReportPreview(); refreshAll(); showToast('Cleared bookings for '+fmtDate(date)); }
+  catch(e){ showToast('Error saving'); }
+}
+
 // ── Detail modal ──────────────────────────────────────────────
 function openDetail(id){
   const b=bookings.find(x=>x.id===id); if(!b) return;
@@ -708,6 +858,8 @@ function openDetail(id){
   const btns=document.getElementById('modal-btns'); btns.innerHTML='';
   if(b.status==='Pending'||b.status==='AdminReserved'){const bn=document.createElement('button');bn.className='m-btn m-btn-g';bn.textContent='Confirm';bn.onclick=()=>{changeStatus(id,'Confirmed');closeDetail();};btns.appendChild(bn);}
   if(b.status!=='Cancelled'){const bn=document.createElement('button');bn.className='m-btn m-btn-r';bn.textContent='Cancel';bn.onclick=()=>{changeStatus(id,'Cancelled');closeDetail();};btns.appendChild(bn);}
+  const eb=document.createElement('button');eb.className='m-btn m-btn-b';eb.textContent='📧 Email';eb.onclick=()=>notifyEmail(id);btns.appendChild(eb);
+  const wb=document.createElement('button');wb.className='m-btn m-btn-w';wb.textContent='💬 WhatsApp';wb.onclick=()=>notifyWhatsapp(id);btns.appendChild(wb);
   const cl=document.createElement('button');cl.className='m-btn m-btn-x';cl.textContent='Close';cl.onclick=closeDetail;btns.appendChild(cl);
   document.getElementById('detail-modal').classList.add('open');
 }
@@ -777,20 +929,57 @@ function refreshAll(){
   if(id==='v-bookings')  renderBookings();
   if(id==='v-seatmap')   renderSeatMap();
   if(id==='v-revenue')   renderRevenue();
+  if(id==='v-report')    renderReportPreview();
 }
 
 // ── Init ──────────────────────────────────────────────────────
-(async function(){
+async function bootConnect(){
+  document.getElementById('pgspin').style.display='block';
+  document.getElementById('pg-msg').textContent='Connecting to database…';
+  document.getElementById('pg-msg').style.color='#4dd97a';
+  document.getElementById('pg-detail').style.display='none';
+  document.getElementById('pg-actions').style.display='none';
   try{
     await loadData();
     document.getElementById('pgload').style.display='none';
     renderDashboard();
     document.getElementById('map-date').valueAsDate=new Date();
   }catch(e){
-    document.getElementById('pg-msg').textContent='Connection failed. Check internet and refresh.';
+    document.getElementById('pgspin').style.display='none';
+    document.getElementById('pg-msg').textContent='Connection failed';
     document.getElementById('pg-msg').style.color='#f0997b';
+    const detail=document.getElementById('pg-detail');
+    detail.style.display='block';
+    let reason = e && e.message ? e.message : String(e);
+    let hint = 'Check your internet connection, then hit Retry. If it keeps failing, your ad-blocker or network may be blocking api.jsonbin.io — try another network, or disable the blocker for this page.';
+    if(cachedBinId && reason==='Fetch failed'){
+      hint = 'Your saved database ID ('+cachedBinId+') could not be reached. It may have been deleted, or the access key changed. You can Retry, or clear this device\'s saved database link and start a fresh one.';
+    }
+    detail.innerHTML = 'Reason: '+reason+'<br><br>'+hint;
+    document.getElementById('pg-actions').style.display='flex';
+    if(cachedBinId){
+      const resetBtn=document.createElement('button');
+      resetBtn.className='tb-btn';
+      resetBtn.textContent='Forget saved database & create new';
+      resetBtn.onclick=forgetAndRecreate;
+      document.getElementById('pg-actions').appendChild(resetBtn);
+    }
   }
-})();
+}
+function retryConnect(){ bootConnect(); }
+function continueOffline(){
+  bookings=[];
+  document.getElementById('pgload').style.display='none';
+  renderDashboard();
+  document.getElementById('map-date').valueAsDate=new Date();
+  showToast('Offline mode — changes won\'t be saved until you reconnect');
+}
+function forgetAndRecreate(){
+  localStorage.removeItem(BIN_ID_KEY);
+  cachedBinId=null;
+  bootConnect();
+}
+bootConnect();
 </script>
 </body>
 </html>
