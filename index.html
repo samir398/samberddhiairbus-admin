@@ -366,7 +366,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="a-email" placeholder="email@example.com"></div>
           <div class="fg"><label>Route</label><select id="a-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
           <div class="fg"><label>Travel Date</label><input type="date" id="a-date"></div>
-          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. 5, 6, SL1"></div>
+          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. A1, B2, SP1"></div>
           <div class="fg"><label>Status</label><select id="a-status"><option>Pending</option><option>Confirmed</option></select></div>
           <div class="fg"><label>Notes</label><input type="text" id="a-notes" placeholder="Optional notes"></div>
         </div>
@@ -443,7 +443,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="m-email" placeholder="email@example.com"></div>
       <div class="fg"><label>Route</label><select id="m-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
       <div class="fg"><label>Travel Date</label><input type="date" id="m-date"></div>
-      <div class="fg"><label>Seats (e.g. 5, 6, SL1)</label><input type="text" id="m-seats" placeholder="5, 6"></div>
+      <div class="fg"><label>Seats (e.g. A1, B2, SP1)</label><input type="text" id="m-seats" placeholder="A1, B2"></div>
       <div class="fg"><label>Status</label><select id="m-status"><option>Pending</option><option>Confirmed</option></select></div>
       <div class="fg"><label>Notes</label><input type="text" id="m-notes" placeholder="Optional"></div>
     </div>
@@ -618,6 +618,7 @@ function filterBkgs(f,el){ curFilter=f; document.querySelectorAll('.tf').forEach
 function searchBkgs(){ renderBookings(curFilter,document.getElementById('search-bar').value); }
 
 // ── SEAT MAP ──────────────────────────────────────────────────
+// Seat labeling: Left column = A1–A18, Right column = B1–B9, Sleeper = SP1, SP2
 function switchMapRoute(r,el){ curMapRoute=r; document.querySelectorAll('.rt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); renderSeatMap(); }
 
 function setClickMode(mode){
@@ -655,7 +656,7 @@ function renderSeatMap(){
   const aiLbl=document.createElement('div'); aiLbl.className='a-ailbl'; aiLbl.textContent='AISLE'; aiCol.appendChild(aiLbl);
   const rCol=document.createElement('div'); rCol.className='a-rcol';
   for(let row=0;row<9;row++){
-    const la=row*2+1,lb=row*2+2,rc=row+19;
+    const la='A'+(row*2+1), lb='A'+(row*2+2), rc='B'+(row+1);
     const pair=document.createElement('div'); pair.className='a-pair';
     pair.appendChild(mkAdminSeat(la,conf,pend,adminRes,mapDate));
     pair.appendChild(mkAdminSeat(lb,conf,pend,adminRes,mapDate));
@@ -665,7 +666,7 @@ function renderSeatMap(){
   grid.appendChild(lCol); grid.appendChild(aiCol); grid.appendChild(rCol);
   const slRow=document.getElementById('a-sl-row'); slRow.innerHTML='';
   for(let s=1;s<=2;s++){
-    const id='SL'+s,el=document.createElement('div');
+    const id='SP'+s,el=document.createElement('div');
     const isCon=conf.has(id),isPend=pend.has(id),isAdmin=adminRes.has(id);
     el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'');
     el.style.cssText='flex:1;height:44px;flex-direction:column;gap:2px;display:flex;';
