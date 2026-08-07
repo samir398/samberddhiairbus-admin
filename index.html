@@ -8,7 +8,11 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:#0b1a0f;min-height:100vh;color:#fff;}
-.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:#061009;border-right:1px solid rgba(45,189,85,0.18);display:flex;flex-direction:column;z-index:100;}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:#061009;border-right:1px solid rgba(45,189,85,0.18);display:flex;flex-direction:column;z-index:100;transition:transform 0.25s ease;}
+.sb-close{display:none;position:absolute;top:14px;right:14px;background:transparent;border:1px solid rgba(45,189,85,0.25);color:rgba(255,255,255,0.5);width:26px;height:26px;border-radius:6px;font-size:14px;cursor:pointer;align-items:center;justify-content:center;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99;}
+.sidebar-overlay.show{display:block;}
+.hamburger{display:none;background:rgba(45,189,85,0.12);border:1px solid rgba(45,189,85,0.3);border-radius:8px;width:36px;height:36px;color:#4dd97a;font-size:16px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;}
 .sb-brand{padding:20px 18px 16px;border-bottom:1px solid rgba(45,189,85,0.15);}
 .sb-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1;}
 .sb-name span{color:#4dd97a;}
@@ -172,6 +176,49 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 @keyframes spin{to{transform:rotate(360deg)}}
 .pg-txt{font-family:'Rajdhani',sans-serif;font-size:14px;color:#4dd97a;letter-spacing:2px;text-transform:uppercase;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(45,189,85,0.3);border-radius:3px;}
+
+/* ═══ COUPONS ═══════════════════════════════════════════ */
+.coupon-form-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:12px;align-items:end;}
+.ctag{display:inline-flex;align-items:center;gap:6px;background:rgba(45,189,85,0.14);border:1px solid rgba(45,189,85,0.3);color:#4dd97a;border-radius:20px;padding:3px 12px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;}
+.ctag.off{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.35);}
+.copy-mini{background:transparent;border:1px solid rgba(45,189,85,0.25);color:#4dd97a;border-radius:5px;padding:3px 8px;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;cursor:pointer;margin-left:6px;}
+.copy-mini:hover{background:rgba(45,189,85,0.15);}
+
+/* ═══ MOBILE RESPONSIVE ═══════════════════════════════════ */
+@media (max-width: 860px){
+  .sidebar{transform:translateX(-100%);box-shadow:20px 0 40px rgba(0,0,0,0.4);}
+  .sidebar.open{transform:translateX(0);}
+  .sb-close{display:flex;}
+  .hamburger{display:flex;}
+  .main{margin-left:0;}
+  .topbar{padding:12px 14px;flex-wrap:wrap;gap:8px;}
+  .topbar-title{font-size:17px;}
+  .topbar-title span{display:block;margin-left:0;font-size:11px;}
+  .tbr{flex-wrap:wrap;gap:6px;width:100%;}
+  .tb-btn{padding:6px 10px;font-size:11px;flex:1 1 auto;text-align:center;}
+  .search-bar{width:100%;order:10;}
+  .content{padding:14px;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat-val{font-size:22px;}
+  .rev-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .rev-val{font-size:20px;}
+  .coupon-form-row{grid-template-columns:1fr;gap:10px;}
+  .coupon-form-row .m-btn{max-width:100%!important;}
+  .tcard{overflow-x:auto;}
+  table{min-width:640px;}
+  .sm-body{flex-direction:column;}
+  .a-bus{max-width:100%;}
+  .sm-right{min-width:0;width:100%;}
+  .modal{width:94vw;padding:18px;}
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  .rtabs{width:100%;}
+  .rt{flex:1 1 auto;text-align:center;}
+}
+@media (max-width: 420px){
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .rev-grid{grid-template-columns:1fr;}
+  .brand-name, .sb-name{font-size:19px;}
+}
 </style>
 </head>
 <body>
@@ -186,7 +233,9 @@ tr:hover td{background:rgba(45,189,85,0.04);}
   </div>
 </div>
 
-<div class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sb-close" onclick="closeSidebar()">✕</button>
   <div class="sb-brand">
     <div class="sb-name">Sambriddhi <span>Air</span></div>
     <div class="sb-sub">Admin Panel</div>
@@ -201,6 +250,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="nav-item" onclick="nav('revenue',this)"><span class="ni">💰</span> Revenue</div>
     <div class="nav-item" onclick="nav('report',this)"><span class="ni">🧾</span> Daily Report</div>
     <div class="nav-item" onclick="nav('add',this)"><span class="ni">➕</span> Add Booking</div>
+    <div class="nav-item" onclick="nav('coupons',this)"><span class="ni">🏷️</span> Coupons</div>
     <div class="nav-sec">System</div>
     <div class="nav-item" onclick="nav('settings',this)"><span class="ni">⚙️</span> Settings</div>
   </div>
@@ -209,7 +259,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title" id="topbar-title">Dashboard <span>Overview</span></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="hamburger" onclick="openSidebar()">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard <span>Overview</span></div>
+    </div>
     <div class="tbr">
       <input class="search-bar" id="search-bar" placeholder="Search…" oninput="searchBkgs()" style="display:none">
       <button class="tb-btn" onclick="refreshData()">↺ Refresh</button>
@@ -378,6 +431,26 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       </div>
     </div>
 
+    <!-- COUPONS -->
+    <div class="view" id="v-coupons">
+      <div class="tcard" style="padding:20px;margin-bottom:16px;">
+        <div class="thead-title" style="margin-bottom:14px;">Create Coupon</div>
+        <div class="coupon-form-row">
+          <div class="fg" style="margin-bottom:0;"><label>Coupon Code</label><input type="text" id="cp-code" placeholder="e.g. SAMBRIDDHI22" style="text-transform:uppercase;"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Discount %</label><input type="number" id="cp-percent" placeholder="e.g. 22" min="1" max="90"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Note (optional)</label><input type="text" id="cp-note" placeholder="e.g. Dashain offer"></div>
+          <button class="m-btn m-btn-g" style="max-width:140px;" onclick="addCoupon()">+ Add Coupon</button>
+        </div>
+        <div id="cp-err" style="color:#f0997b;font-size:12px;margin-top:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:10px;">Active coupons appear instantly on the customer booking site (Choose Seats step). Customers enter the code to get the discounted price per seat.</div>
+      </div>
+      <div class="tcard">
+        <div class="thead"><div class="thead-title">All Coupons</div></div>
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Price / Seat</th><th>Note</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody id="cp-tbody"></tbody></table>
+      </div>
+    </div>
+
     <!-- SETTINGS -->
     <div class="view" id="v-settings">
       <div class="sc">
@@ -473,6 +546,7 @@ const FIXED_BIN_ID = '69e5c3f436566621a8d01951';
 // ═══════════════════════════════════════════
 let PRICE            = parseInt(localStorage.getItem(PRICE_KEY), 10) || 2500;
 let bookings          = [];
+let coupons           = [];
 let cachedBinId       = FIXED_BIN_ID || localStorage.getItem(BIN_ID_KEY) || null;
 let curFilter        = 'all';
 let curMapRoute      = 'Dharan → Pokhara';
@@ -508,29 +582,34 @@ function savePriceConfig(){
 async function getBinId(){
   if(FIXED_BIN_ID) return FIXED_BIN_ID;
   if(cachedBinId) return cachedBinId;
-  const res=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY,'X-Bin-Name':'sambriddhi-bookings','X-Bin-Private':'true'},body:JSON.stringify({bookings:[]})});
+  const res=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY,'X-Bin-Name':'sambriddhi-bookings','X-Bin-Private':'true'},body:JSON.stringify({bookings:[],coupons:[]})});
   const d=await res.json(); cachedBinId=d.metadata.id; localStorage.setItem(BIN_ID_KEY,cachedBinId); return cachedBinId;
 }
 async function loadData(){
   const id=await getBinId();
   const res=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':MASTER_KEY,'X-Access-Key':ACCESS_KEY}});
   if(!res.ok) throw new Error('Fetch failed');
-  const d=await res.json(); bookings=d.record.bookings||[];
+  const d=await res.json(); bookings=d.record.bookings||[]; coupons=d.record.coupons||[];
 }
 async function saveData(){
   const id=await getBinId();
-  const res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings})});
+  const res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings,coupons})});
   if(!res.ok) throw new Error('Save failed');
 }
 
 // ── Nav ──────────────────────────────────────────────────────
+// ── Mobile sidebar ───────────────────────────────────────────
+function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
 function nav(page,el){
+  closeSidebar();
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('v-'+page).classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',settings:'Settings'};
-  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Click seats to reserve or free them',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',settings:'System settings'};
+  const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',coupons:'Coupons',settings:'Settings'};
+  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Click seats to reserve or free them',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
   document.getElementById('topbar-title').innerHTML=titles[page]+' <span>'+subs[page]+'</span>';
   document.getElementById('search-bar').style.display=page==='bookings'?'block':'none';
   if(page==='dashboard') renderDashboard();
@@ -538,6 +617,7 @@ function nav(page,el){
   if(page==='seatmap')   { document.getElementById('map-date').valueAsDate=new Date(); renderSeatMap(); }
   if(page==='revenue')   renderRevenue();
   if(page==='report')    { if(!document.getElementById('rep-date').value) document.getElementById('rep-date').valueAsDate=new Date(); renderReportPreview(); }
+  if(page==='coupons')   renderCoupons();
   if(page==='settings')  { document.getElementById('bin-disp').textContent='Bin ID: '+(cachedBinId||'Not created'); document.getElementById('cfg-email').value=NOTIFY.email; document.getElementById('cfg-whatsapp').value=NOTIFY.whatsapp; document.getElementById('cfg-price').value=PRICE; }
 }
 
@@ -790,6 +870,58 @@ function renderRevenue(){
   }).join('');
 }
 
+// ── COUPONS ───────────────────────────────────────────────────
+function renderCoupons(){
+  document.getElementById('cp-tbody').innerHTML = coupons.length ? [...coupons].reverse().map(c=>{
+    const discPrice = Math.round(PRICE * (1 - c.percent/100));
+    return `<tr>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:700;letter-spacing:1px;">${c.code}<button class="copy-mini" onclick="copyCoupon('${c.code}')">Copy</button></td>
+      <td>${c.percent}% off</td>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${discPrice.toLocaleString()}</td>
+      <td>${c.note||'—'}</td>
+      <td><span class="ctag ${c.active?'':'off'}">${c.active?'● ACTIVE':'○ DISABLED'}</span></td>
+      <td>${fmtDate(c.created)}</td>
+      <td>
+        <button class="act-btn" onclick="toggleCoupon('${c.id}')">${c.active?'Disable':'Enable'}</button>
+        <button class="act-btn red" onclick="deleteCoupon('${c.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No coupons yet — create one above</td></tr>';
+}
+function copyCoupon(code){
+  navigator.clipboard.writeText(code).then(()=>showToast('Copied "'+code+'"')).catch(()=>showToast('Could not copy'));
+}
+async function addCoupon(){
+  const code=document.getElementById('cp-code').value.trim().toUpperCase();
+  const percent=parseInt(document.getElementById('cp-percent').value,10);
+  const note=document.getElementById('cp-note').value.trim();
+  const err=document.getElementById('cp-err');
+  if(!code){ err.textContent='Please enter a coupon code.'; err.style.display='block'; return; }
+  if(!percent||percent<=0||percent>90){ err.textContent='Enter a discount percentage between 1 and 90.'; err.style.display='block'; return; }
+  if(coupons.some(c=>c.code===code)){ err.textContent='A coupon with this code already exists.'; err.style.display='block'; return; }
+  err.style.display='none';
+  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent,note,active:true,created:new Date().toISOString().split('T')[0]});
+  try{
+    await saveData();
+    document.getElementById('cp-code').value=''; document.getElementById('cp-percent').value=''; document.getElementById('cp-note').value='';
+    renderCoupons();
+    showToast('Coupon "'+code+'" created!');
+  }catch(e){ showToast('Save error'); }
+}
+async function toggleCoupon(id){
+  const c=coupons.find(x=>x.id===id); if(!c) return;
+  c.active=!c.active;
+  try{ await saveData(); renderCoupons(); showToast('Coupon "'+c.code+'" '+(c.active?'enabled':'disabled')); }
+  catch(e){ showToast('Save error'); }
+}
+async function deleteCoupon(id){
+  const c=coupons.find(x=>x.id===id); if(!c) return;
+  if(!confirm('Delete coupon "'+c.code+'"? This cannot be undone.')) return;
+  coupons=coupons.filter(x=>x.id!==id);
+  try{ await saveData(); renderCoupons(); showToast('Coupon deleted'); }
+  catch(e){ showToast('Save error'); }
+}
+
 // ── Daily Report (PDF) ─────────────────────────────────────────
 function getReportData(){
   const date=document.getElementById('rep-date').value;
@@ -868,6 +1000,7 @@ function openDetail(id){
     <div class="mrow"><span>Seats</span><span>${fmtSeats(b.seats)}</span></div>
     <div class="mrow"><span>Total</span><span style="color:#4dd97a;font-family:Rajdhani,sans-serif;font-weight:700;">Rs. ${(b.seats.length*PRICE).toLocaleString()}</span></div>
     <div class="mrow"><span>Status</span><span>${statusBadge(b.status)}</span></div>
+    ${b.coupon?`<div class="mrow"><span>Coupon</span><span style="color:#4dd97a;">${b.coupon}</span></div>`:''}
     ${b.notes?`<div class="mrow"><span>Notes</span><span>${b.notes}</span></div>`:''}
   `;
   const btns=document.getElementById('modal-btns'); btns.innerHTML='';
@@ -945,6 +1078,7 @@ function refreshAll(){
   if(id==='v-seatmap')   renderSeatMap();
   if(id==='v-revenue')   renderRevenue();
   if(id==='v-report')    renderReportPreview();
+  if(id==='v-coupons')   renderCoupons();
 }
 
 // ── Init ──────────────────────────────────────────────────────
@@ -983,7 +1117,7 @@ async function bootConnect(){
 }
 function retryConnect(){ bootConnect(); }
 function continueOffline(){
-  bookings=[];
+  bookings=[]; coupons=[];
   document.getElementById('pgload').style.display='none';
   renderDashboard();
   document.getElementById('map-date').valueAsDate=new Date();
