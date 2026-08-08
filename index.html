@@ -178,7 +178,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(45,189,85,0.3);border-radius:3px;}
 
 /* ═══ COUPONS ═══════════════════════════════════════════ */
-.coupon-form-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:12px;align-items:end;}
+.coupon-form-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.9fr 1fr auto;gap:12px;align-items:end;}
 .ctag{display:inline-flex;align-items:center;gap:6px;background:rgba(45,189,85,0.14);border:1px solid rgba(45,189,85,0.3);color:#4dd97a;border-radius:20px;padding:3px 12px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;}
 .ctag.off{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.35);}
 .copy-mini{background:transparent;border:1px solid rgba(45,189,85,0.25);color:#4dd97a;border-radius:5px;padding:3px 8px;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;cursor:pointer;margin-left:6px;}
@@ -388,7 +388,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
         <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
           <div class="fg" style="margin-bottom:0;">
             <label>Date</label>
-            <input type="date" id="rep-date" onchange="renderReportPreview()">
+            <input type="date" id="rep-date" onchange="document.getElementById('rep-remark').value='';renderReportPreview()">
           </div>
           <div class="fg" style="margin-bottom:0;">
             <label>Include</label>
@@ -400,6 +400,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           </div>
           <button class="m-btn m-btn-g" style="max-width:200px;" onclick="downloadDailyPDF()">⬇ Download PDF</button>
           <button class="m-btn m-btn-r" style="max-width:200px;" onclick="clearDay()">🗑 Clear This Day</button>
+        </div>
+        <div class="fg" style="margin-top:14px;margin-bottom:0;">
+          <label>Remark (optional — printed on the PDF)</label>
+          <input type="text" id="rep-remark" placeholder="e.g. Heavy rain delayed departure by 30 min">
         </div>
       </div>
       <div class="tcard">
@@ -419,7 +423,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="a-email" placeholder="email@example.com"></div>
           <div class="fg"><label>Route</label><select id="a-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
           <div class="fg"><label>Travel Date</label><input type="date" id="a-date"></div>
-          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. A1, B2, SP1"></div>
+          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. B1, A2, SP1"></div>
           <div class="fg"><label>Status</label><select id="a-status"><option>Pending</option><option>Confirmed</option></select></div>
           <div class="fg"><label>Notes</label><input type="text" id="a-notes" placeholder="Optional notes"></div>
         </div>
@@ -437,10 +441,12 @@ tr:hover td{background:rgba(45,189,85,0.04);}
         <div class="thead-title" style="margin-bottom:14px;">Create Coupon</div>
         <div class="coupon-form-row">
           <div class="fg" style="margin-bottom:0;"><label>Coupon Code</label><input type="text" id="cp-code" placeholder="e.g. SAMBRIDDHI22" style="text-transform:uppercase;"></div>
-          <div class="fg" style="margin-bottom:0;"><label>Discount %</label><input type="number" id="cp-percent" placeholder="e.g. 22" min="1" max="90"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Discount %</label><input type="number" id="cp-percent" placeholder="e.g. 22" min="1" max="90" oninput="syncCouponPrice('percent')"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Price / Seat (Rs.)</label><input type="number" id="cp-price" placeholder="auto" min="1" oninput="syncCouponPrice('price')"></div>
           <div class="fg" style="margin-bottom:0;"><label>Note (optional)</label><input type="text" id="cp-note" placeholder="e.g. Dashain offer"></div>
           <button class="m-btn m-btn-g" style="max-width:140px;" onclick="addCoupon()">+ Add Coupon</button>
         </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:8px;">Enter a discount % and the price auto-fills — or type an exact "Price / Seat" yourself to set it directly (it will override the %).</div>
         <div id="cp-err" style="color:#f0997b;font-size:12px;margin-top:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:10px;">Active coupons appear instantly on the customer booking site (Choose Seats step). Customers enter the code to get the discounted price per seat.</div>
       </div>
@@ -516,7 +522,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="m-email" placeholder="email@example.com"></div>
       <div class="fg"><label>Route</label><select id="m-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
       <div class="fg"><label>Travel Date</label><input type="date" id="m-date"></div>
-      <div class="fg"><label>Seats (e.g. A1, B2, SP1)</label><input type="text" id="m-seats" placeholder="A1, B2"></div>
+      <div class="fg"><label>Seats (e.g. B1, A2, SP1)</label><input type="text" id="m-seats" placeholder="B1, A2"></div>
       <div class="fg"><label>Status</label><select id="m-status"><option>Pending</option><option>Confirmed</option></select></div>
       <div class="fg"><label>Notes</label><input type="text" id="m-notes" placeholder="Optional"></div>
     </div>
@@ -698,7 +704,7 @@ function filterBkgs(f,el){ curFilter=f; document.querySelectorAll('.tf').forEach
 function searchBkgs(){ renderBookings(curFilter,document.getElementById('search-bar').value); }
 
 // ── SEAT MAP ──────────────────────────────────────────────────
-// Seat labeling: Left column = A1–A18, Right column = B1–B9, Sleeper = SP1, SP2
+// Seat labeling: Left column = B1–B18, Right column = A1–A9, Sleeper = SP1, SP2
 function switchMapRoute(r,el){ curMapRoute=r; document.querySelectorAll('.rt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); renderSeatMap(); }
 
 function setClickMode(mode){
@@ -736,7 +742,7 @@ function renderSeatMap(){
   const aiLbl=document.createElement('div'); aiLbl.className='a-ailbl'; aiLbl.textContent='AISLE'; aiCol.appendChild(aiLbl);
   const rCol=document.createElement('div'); rCol.className='a-rcol';
   for(let row=0;row<9;row++){
-    const la='A'+(row*2+1), lb='A'+(row*2+2), rc='B'+(row+1);
+    const la='B'+(row*2+1), lb='B'+(row*2+2), rc='A'+(row+1);
     const pair=document.createElement('div'); pair.className='a-pair';
     pair.appendChild(mkAdminSeat(la,conf,pend,adminRes,mapDate));
     pair.appendChild(mkAdminSeat(lb,conf,pend,adminRes,mapDate));
@@ -871,13 +877,16 @@ function renderRevenue(){
 }
 
 // ── COUPONS ───────────────────────────────────────────────────
+function couponPrice(c){
+  return c.priceOverride ? c.priceOverride : Math.round(PRICE * (1 - c.percent/100));
+}
 function renderCoupons(){
   document.getElementById('cp-tbody').innerHTML = coupons.length ? [...coupons].reverse().map(c=>{
-    const discPrice = Math.round(PRICE * (1 - c.percent/100));
+    const discPrice = couponPrice(c);
     return `<tr>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:700;letter-spacing:1px;">${c.code}<button class="copy-mini" onclick="copyCoupon('${c.code}')">Copy</button></td>
       <td>${c.percent}% off</td>
-      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${discPrice.toLocaleString()}</td>
+      <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${discPrice.toLocaleString()}${c.priceOverride?' <span style="color:rgba(255,255,255,0.3);font-size:10px;">(manual)</span>':''}</td>
       <td>${c.note||'—'}</td>
       <td><span class="ctag ${c.active?'':'off'}">${c.active?'● ACTIVE':'○ DISABLED'}</span></td>
       <td>${fmtDate(c.created)}</td>
@@ -891,21 +900,42 @@ function renderCoupons(){
 function copyCoupon(code){
   navigator.clipboard.writeText(code).then(()=>showToast('Copied "'+code+'"')).catch(()=>showToast('Could not copy'));
 }
+// Keep the % field and the manual Price field in sync as the admin types
+// in either one — editing % recalculates the price, editing the price
+// recalculates the (approximate) %, and whichever the admin touched last
+// is what gets saved as the source of truth (see addCoupon()).
+function syncCouponPrice(source){
+  const pctEl=document.getElementById('cp-percent'), priceEl=document.getElementById('cp-price');
+  if(source==='percent'){
+    const pct=parseFloat(pctEl.value);
+    if(pct>0 && pct<=90) priceEl.value=Math.round(PRICE*(1-pct/100));
+    else priceEl.value='';
+  }else{
+    const price=parseFloat(priceEl.value);
+    if(price>0 && price<PRICE) pctEl.value=Math.round((1-price/PRICE)*100);
+  }
+}
 async function addCoupon(){
   const code=document.getElementById('cp-code').value.trim().toUpperCase();
-  const percent=parseInt(document.getElementById('cp-percent').value,10);
+  const percentInput=document.getElementById('cp-percent').value;
+  const priceInput=document.getElementById('cp-price').value;
   const note=document.getElementById('cp-note').value.trim();
   const err=document.getElementById('cp-err');
+  const percent=parseInt(percentInput,10);
+  const price=parseInt(priceInput,10);
   if(!code){ err.textContent='Please enter a coupon code.'; err.style.display='block'; return; }
-  if(!percent||percent<=0||percent>90){ err.textContent='Enter a discount percentage between 1 and 90.'; err.style.display='block'; return; }
+  if((!percent||percent<=0||percent>90) && (!price||price<=0)){ err.textContent='Enter a discount % or a manual Price / Seat.'; err.style.display='block'; return; }
+  if(price>0 && price>=PRICE){ err.textContent='Manual price must be less than the base price (Rs. '+PRICE+').'; err.style.display='block'; return; }
   if(coupons.some(c=>c.code===code)){ err.textContent='A coupon with this code already exists.'; err.style.display='block'; return; }
   err.style.display='none';
-  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent,note,active:true,created:new Date().toISOString().split('T')[0]});
+  const finalPercent = percent>0 ? percent : Math.round((1-price/PRICE)*100);
+  const priceOverride = price>0 ? price : null;
+  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent:finalPercent,priceOverride,note,active:true,created:new Date().toISOString().split('T')[0]});
   try{
     await saveData();
-    document.getElementById('cp-code').value=''; document.getElementById('cp-percent').value=''; document.getElementById('cp-note').value='';
+    document.getElementById('cp-code').value=''; document.getElementById('cp-percent').value=''; document.getElementById('cp-price').value=''; document.getElementById('cp-note').value='';
     renderCoupons();
-    showToast('Coupon "'+code+'" created!');
+    showToast('Coupon "'+code+'" created — Rs. '+couponPrice(coupons[coupons.length-1])+' / seat');
   }catch(e){ showToast('Save error'); }
 }
 async function toggleCoupon(id){
@@ -973,6 +1003,14 @@ function downloadDailyPDF(){
   doc.setTextColor(0);
   doc.text('Total Passengers: '+totalSeats,14,finalY);
   doc.text('Confirmed Revenue: Rs. '+totalRev.toLocaleString(),14,finalY+7);
+  const remark=(document.getElementById('rep-remark').value||'').trim();
+  if(remark){
+    doc.setFontSize(10);
+    doc.setTextColor(90);
+    doc.text('Remark:',14,finalY+17);
+    const wrapped=doc.splitTextToSize(remark,180);
+    doc.text(wrapped,14,finalY+23);
+  }
   doc.save('sambriddhi_customers_'+date+'.pdf');
   showToast('PDF downloaded!');
 }
