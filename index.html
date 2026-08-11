@@ -182,6 +182,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .coupon-form-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.9fr 1fr auto;gap:12px;align-items:end;}
 .ctag{display:inline-flex;align-items:center;gap:6px;background:rgba(45,189,85,0.14);border:1px solid rgba(45,189,85,0.3);color:#4dd97a;border-radius:20px;padding:3px 12px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;}
 .ctag.off{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.35);}
+.ctag.exp{background:rgba(240,153,123,0.12);border-color:rgba(240,153,123,0.3);color:#f0997b;}
 .copy-mini{background:transparent;border:1px solid rgba(45,189,85,0.25);color:#4dd97a;border-radius:5px;padding:3px 8px;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;cursor:pointer;margin-left:6px;}
 .copy-mini:hover{background:rgba(45,189,85,0.15);}
 .coupon-chip{display:inline-block;background:rgba(45,189,85,0.15);color:#4dd97a;border:1px solid rgba(45,189,85,0.3);border-radius:20px;padding:2px 9px;font-size:10.5px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.5px;}
@@ -449,13 +450,18 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg" style="margin-bottom:0;"><label>Note (optional)</label><input type="text" id="cp-note" placeholder="e.g. Dashain offer"></div>
           <button class="m-btn m-btn-g" style="max-width:140px;" onclick="addCoupon()">+ Add Coupon</button>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;max-width:520px;">
+          <div class="fg" style="margin-bottom:0;"><label>Valid From (optional)</label><input type="date" id="cp-valid-from"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Valid Until (optional)</label><input type="date" id="cp-valid-until"></div>
+        </div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:8px;">Enter a discount % and the price auto-fills — or type an exact "Price / Seat" yourself to set it directly (it will override the %).</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:4px;">Leave the dates blank for a coupon that never expires. Set "Valid Until" to make it automatically stop working (and show as Expired here) after that date.</div>
         <div id="cp-err" style="color:#f0997b;font-size:12px;margin-top:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:10px;">Active coupons appear instantly on the customer booking site (Choose Seats step). Customers enter the code to get the discounted price per seat.</div>
       </div>
       <div class="tcard">
         <div class="thead"><div class="thead-title">All Coupons</div></div>
-        <table><thead><tr><th>Code</th><th>Discount</th><th>Price / Seat</th><th>Note</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Price / Seat</th><th>Note</th><th>Valid Period</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
         <tbody id="cp-tbody"></tbody></table>
       </div>
     </div>
@@ -908,22 +914,47 @@ function renderRevenue(){
 function couponPrice(c){
   return c.priceOverride ? c.priceOverride : Math.round(PRICE * (1 - c.percent/100));
 }
+// A coupon is only usable "today" if: it's toggled active, AND today's
+// date (YYYY-MM-DD, local) falls within its optional validFrom/validUntil
+// window. Missing validFrom/validUntil means no lower/upper bound.
+function couponIsInDateWindow(c,todayStr){
+  const t = todayStr || new Date().toISOString().split('T')[0];
+  if(c.validFrom && t < c.validFrom) return false;
+  if(c.validUntil && t > c.validUntil) return false;
+  return true;
+}
+function couponIsUsable(c){ return !!c.active && couponIsInDateWindow(c); }
+function couponPeriodLabel(c){
+  if(!c.validFrom && !c.validUntil) return 'No expiry';
+  if(c.validFrom && c.validUntil) return fmtDate(c.validFrom)+' – '+fmtDate(c.validUntil);
+  if(c.validUntil) return 'Until '+fmtDate(c.validUntil);
+  return 'From '+fmtDate(c.validFrom);
+}
 function renderCoupons(){
+  const today=new Date().toISOString().split('T')[0];
   document.getElementById('cp-tbody').innerHTML = coupons.length ? [...coupons].reverse().map(c=>{
     const discPrice = couponPrice(c);
+    const expired = c.validUntil && today > c.validUntil;
+    const notYetStarted = c.validFrom && today < c.validFrom;
+    let statusHtml;
+    if(!c.active){ statusHtml = `<span class="ctag off">○ DISABLED</span>`; }
+    else if(expired){ statusHtml = `<span class="ctag exp">⏱ EXPIRED</span>`; }
+    else if(notYetStarted){ statusHtml = `<span class="ctag off">◷ NOT STARTED</span>`; }
+    else{ statusHtml = `<span class="ctag">● ACTIVE</span>`; }
     return `<tr>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:700;letter-spacing:1px;">${c.code}<button class="copy-mini" onclick="copyCoupon('${c.code}')">Copy</button></td>
       <td>${c.percent}% off</td>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${discPrice.toLocaleString()}${c.priceOverride?' <span style="color:rgba(255,255,255,0.3);font-size:10px;">(manual)</span>':''}</td>
       <td>${c.note||'—'}</td>
-      <td><span class="ctag ${c.active?'':'off'}">${c.active?'● ACTIVE':'○ DISABLED'}</span></td>
+      <td style="font-size:11.5px;color:rgba(255,255,255,0.55);">${couponPeriodLabel(c)}</td>
+      <td>${statusHtml}</td>
       <td>${fmtDate(c.created)}</td>
       <td>
         <button class="act-btn" onclick="toggleCoupon('${c.id}')">${c.active?'Disable':'Enable'}</button>
         <button class="act-btn red" onclick="deleteCoupon('${c.id}')">Delete</button>
       </td>
     </tr>`;
-  }).join('') : '<tr><td colspan="7" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No coupons yet — create one above</td></tr>';
+  }).join('') : '<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No coupons yet — create one above</td></tr>';
 }
 function copyCoupon(code){
   navigator.clipboard.writeText(code).then(()=>showToast('Copied "'+code+'"')).catch(()=>showToast('Could not copy'));
@@ -948,6 +979,8 @@ async function addCoupon(){
   const percentInput=document.getElementById('cp-percent').value;
   const priceInput=document.getElementById('cp-price').value;
   const note=document.getElementById('cp-note').value.trim();
+  const validFrom=document.getElementById('cp-valid-from').value || null;
+  const validUntil=document.getElementById('cp-valid-until').value || null;
   const err=document.getElementById('cp-err');
   const percent=parseInt(percentInput,10);
   const price=parseInt(priceInput,10);
@@ -955,13 +988,15 @@ async function addCoupon(){
   if((!percent||percent<=0||percent>90) && (!price||price<=0)){ err.textContent='Enter a discount % or a manual Price / Seat.'; err.style.display='block'; return; }
   if(price>0 && price>=PRICE){ err.textContent='Manual price must be less than the base price (Rs. '+PRICE+').'; err.style.display='block'; return; }
   if(coupons.some(c=>c.code===code)){ err.textContent='A coupon with this code already exists.'; err.style.display='block'; return; }
+  if(validFrom && validUntil && validFrom>validUntil){ err.textContent='"Valid From" must be before "Valid Until".'; err.style.display='block'; return; }
   err.style.display='none';
   const finalPercent = percent>0 ? percent : Math.round((1-price/PRICE)*100);
   const priceOverride = price>0 ? price : null;
-  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent:finalPercent,priceOverride,note,active:true,created:new Date().toISOString().split('T')[0]});
+  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent:finalPercent,priceOverride,note,validFrom,validUntil,active:true,created:new Date().toISOString().split('T')[0]});
   try{
     await saveData();
     document.getElementById('cp-code').value=''; document.getElementById('cp-percent').value=''; document.getElementById('cp-price').value=''; document.getElementById('cp-note').value='';
+    document.getElementById('cp-valid-from').value=''; document.getElementById('cp-valid-until').value='';
     renderCoupons();
     showToast('Coupon "'+code+'" created — Rs. '+couponPrice(coupons[coupons.length-1])+' / seat');
   }catch(e){ showToast('Save error'); }
