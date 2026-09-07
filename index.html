@@ -595,6 +595,36 @@ function savePriceConfig(){
   refreshAll();
 }
 
+// ── Diagnostics helper ──────────────────────────────────────
+// Turns a raw fetch error / bad response into a specific, actionable
+// message instead of a generic "Fetch failed" / "Failed to fetch".
+function classifyNetworkError(e, res){
+  // Case 1: fetch() itself threw (no response was ever received).
+  // This is a TypeError, and its message is browser-dependent but
+  // almost always contains "fetch" or "network".
+  if(e instanceof TypeError){
+    return {
+      kind: 'network',
+      message: 'Failed to fetch',
+      hint: 'The request to api.jsonbin.io never got a response. This is almost always caused by: (1) an ad-blocker or privacy extension (uBlock, Brave Shields, Privacy Badger) blocking the domain — try disabling it or use an Incognito window, (2) no internet connection, or (3) a network/firewall (school, office, some public Wi-Fi) blocking that specific domain — try another network or mobile data. It is NOT caused by a wrong API key or missing bin — those return a normal response instead.'
+    };
+  }
+  // Case 2: fetch got a response, but it was an HTTP error (4xx/5xx).
+  if(res){
+    if(res.status===401||res.status===403){
+      return { kind:'auth', message:'HTTP '+res.status+' — Unauthorized', hint:'The Master Key / Access Key in the code is being rejected by JSONBin. It may have been revoked or the account may be suspended.' };
+    }
+    if(res.status===404){
+      return { kind:'notfound', message:'HTTP 404 — Bin not found', hint:'The bin ID "'+FIXED_BIN_ID+'" does not exist (it may have been deleted). You will need to create a new bin on jsonbin.io and update FIXED_BIN_ID in the code.' };
+    }
+    if(res.status===429){
+      return { kind:'ratelimit', message:'HTTP 429 — Rate limited', hint:'Too many requests have been sent to the free-tier JSONBin plan in a short time. Wait a minute and Retry.' };
+    }
+    return { kind:'http', message:'HTTP '+res.status, hint:'JSONBin returned an unexpected error status. Try Retry; if it persists, check your JSONBin account dashboard.' };
+  }
+  return { kind:'unknown', message:(e&&e.message)||String(e), hint:'An unexpected error occurred. Try Retry, and check the browser console (F12) for more detail.' };
+}
+
 // ── JSONBin ──────────────────────────────────────────────────
 async function getBinId(){
   if(FIXED_BIN_ID) return FIXED_BIN_ID;
@@ -604,14 +634,24 @@ async function getBinId(){
 }
 async function loadData(){
   const id=await getBinId();
-  const res=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':MASTER_KEY,'X-Access-Key':ACCESS_KEY}});
-  if(!res.ok) throw new Error('Fetch failed');
+  let res;
+  try{
+    res=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':MASTER_KEY,'X-Access-Key':ACCESS_KEY}});
+  }catch(e){
+    throw classifyNetworkError(e,null);
+  }
+  if(!res.ok) throw classifyNetworkError(null,res);
   const d=await res.json(); bookings=d.record.bookings||[]; coupons=d.record.coupons||[];
 }
 async function saveData(){
   const id=await getBinId();
-  const res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings,coupons})});
-  if(!res.ok) throw new Error('Save failed');
+  let res;
+  try{
+    res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings,coupons})});
+  }catch(e){
+    throw classifyNetworkError(e,null);
+  }
+  if(!res.ok) throw classifyNetworkError(null,res);
 }
 
 // ── Nav ──────────────────────────────────────────────────────
@@ -852,7 +892,7 @@ async function confirmReserve(){
     created:new Date().toISOString().split('T')[0]
   });
   try{ await saveData(); renderSeatMap(); refreshAll(); showToast('Seat '+pendingReserve.seatId+' reserved for '+name+'!'); }
-  catch(e){ showToast('Error saving — try again'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Error saving — try again'); }
 }
 
 async function freeSeat(sid,mapDate){
@@ -861,7 +901,7 @@ async function freeSeat(sid,mapDate){
   if(idx===-1){ showToast('Could not find reservation to remove.'); return; }
   bookings.splice(idx,1);
   try{ await saveData(); renderSeatMap(); refreshAll(); showToast('Seat '+sid+' is now free.'); }
-  catch(e){ showToast('Error saving'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Error saving'); }
 }
 
 function closeReserveModal(){ document.getElementById('reserve-modal').classList.remove('open'); }
@@ -999,20 +1039,20 @@ async function addCoupon(){
     document.getElementById('cp-valid-from').value=''; document.getElementById('cp-valid-until').value='';
     renderCoupons();
     showToast('Coupon "'+code+'" created — Rs. '+couponPrice(coupons[coupons.length-1])+' / seat');
-  }catch(e){ showToast('Save error'); }
+  }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 async function toggleCoupon(id){
   const c=coupons.find(x=>x.id===id); if(!c) return;
   c.active=!c.active;
   try{ await saveData(); renderCoupons(); showToast('Coupon "'+c.code+'" '+(c.active?'enabled':'disabled')); }
-  catch(e){ showToast('Save error'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 async function deleteCoupon(id){
   const c=coupons.find(x=>x.id===id); if(!c) return;
   if(!confirm('Delete coupon "'+c.code+'"? This cannot be undone.')) return;
   coupons=coupons.filter(x=>x.id!==id);
   try{ await saveData(); renderCoupons(); showToast('Coupon deleted'); }
-  catch(e){ showToast('Save error'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 
 // ── Daily Report (PDF) ─────────────────────────────────────────
@@ -1094,7 +1134,7 @@ async function clearDay(){
   const idsToRemove=new Set(data.map(b=>b.id));
   bookings=bookings.filter(b=>!idsToRemove.has(b.id));
   try{ await saveData(); renderReportPreview(); refreshAll(); showToast('Cleared bookings for '+fmtDate(date)); }
-  catch(e){ showToast('Error saving'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Error saving'); }
 }
 
 // ── Detail modal ──────────────────────────────────────────────
@@ -1129,7 +1169,7 @@ async function changeStatus(id,status){
   const b=bookings.find(x=>x.id===id); if(!b) return;
   b.status=status; b.isAdminBlock=false;
   try{ await saveData(); refreshAll(); showToast('Booking '+id+' → '+status); }
-  catch(e){ showToast('Save error'); }
+  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 
 // ── Add booking ───────────────────────────────────────────────
@@ -1142,7 +1182,7 @@ async function addBooking(){
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
   err.style.display='none';
   bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
-  try{ await saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!'); }catch(e){ showToast('Save error'); }
+  try{ await saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 function clearAddForm(){ ['a-name','a-phone','a-email','a-date','a-seats','a-notes'].forEach(id=>document.getElementById(id).value=''); document.getElementById('add-err').style.display='none'; }
 
@@ -1158,7 +1198,7 @@ async function saveModalBooking(){
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
   err.style.display='none';
   bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
-  try{ await saveData(); ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id=>document.getElementById(id).value=''); closeAddModal(); refreshAll(); showToast('Booking added!'); }catch(e){ showToast('Save error'); }
+  try{ await saveData(); ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id=>document.getElementById(id).value=''); closeAddModal(); refreshAll(); showToast('Booking added!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 
 // ── Export / Clear ────────────────────────────────────────────
@@ -1171,12 +1211,12 @@ function exportCSV(){
 async function clearAll(){
   if(!confirm('Delete ALL bookings from the database? This cannot be undone.')) return;
   bookings=[];
-  try{ await saveData(); refreshAll(); showToast('All bookings cleared.'); }catch(e){ showToast('Error'); }
+  try{ await saveData(); refreshAll(); showToast('All bookings cleared.'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Error'); }
 }
 
 async function refreshData(){
   showToast('Refreshing…');
-  try{ await loadData(); refreshAll(); showToast('Updated!'); }catch(e){ showToast('Refresh failed'); }
+  try{ await loadData(); refreshAll(); showToast('Updated!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Refresh failed'); }
 }
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
@@ -1210,11 +1250,11 @@ async function bootConnect(){
     document.getElementById('pg-msg').style.color='#f0997b';
     const detail=document.getElementById('pg-detail');
     detail.style.display='block';
-    let reason = e && e.message ? e.message : String(e);
-    let hint = 'Check your internet connection, then hit Retry. If it keeps failing, your ad-blocker or network may be blocking api.jsonbin.io — try another network, or disable the blocker for this page.';
-    if(cachedBinId && reason==='Fetch failed'){
-      hint = 'Your saved database ID ('+cachedBinId+') could not be reached. It may have been deleted, or the access key changed. You can Retry, or clear this device\'s saved database link and start a fresh one.';
-    }
+    // e is now a classified error object: { kind, message, hint } — see
+    // classifyNetworkError() above. Fall back gracefully if something else
+    // (e.g. a plain JS exception) was thrown instead.
+    let reason = (e && e.message) ? e.message : String(e);
+    let hint = (e && e.hint) ? e.hint : 'Check your internet connection, then hit Retry. If it keeps failing, your ad-blocker or network may be blocking api.jsonbin.io — try another network, or disable the blocker for this page.';
     detail.innerHTML = 'Reason: '+reason+'<br><br>'+hint;
     document.getElementById('pg-actions').style.display='flex';
     if(cachedBinId){
