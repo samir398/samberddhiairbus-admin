@@ -450,18 +450,20 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg" style="margin-bottom:0;"><label>Note (optional)</label><input type="text" id="cp-note" placeholder="e.g. Dashain offer"></div>
           <button class="m-btn m-btn-g" style="max-width:140px;" onclick="addCoupon()">+ Add Coupon</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;max-width:520px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;max-width:680px;">
           <div class="fg" style="margin-bottom:0;"><label>Valid From (optional)</label><input type="date" id="cp-valid-from"></div>
           <div class="fg" style="margin-bottom:0;"><label>Valid Until (optional)</label><input type="date" id="cp-valid-until"></div>
+          <div class="fg" style="margin-bottom:0;"><label>Max Uses (optional)</label><input type="number" id="cp-maxuses" placeholder="e.g. 50" min="1"></div>
         </div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:8px;">Enter a discount % and the price auto-fills — or type an exact "Price / Seat" yourself to set it directly (it will override the %).</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:4px;">Leave the dates blank for a coupon that never expires. Set "Valid Until" to make it automatically stop working (and show as Expired here) after that date.</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:4px;">Leave "Max Uses" blank for unlimited uses. A "use" is counted as one non-cancelled booking made with that code — once the limit is hit, the coupon shows as Limit Reached here and customers will no longer be able to apply it on the booking site.</div>
         <div id="cp-err" style="color:#f0997b;font-size:12px;margin-top:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
         <div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:10px;">Active coupons appear instantly on the customer booking site (Choose Seats step). Customers enter the code to get the discounted price per seat.</div>
       </div>
       <div class="tcard">
         <div class="thead"><div class="thead-title">All Coupons</div></div>
-        <table><thead><tr><th>Code</th><th>Discount</th><th>Price / Seat</th><th>Note</th><th>Valid Period</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Price / Seat</th><th>Note</th><th>Valid Period</th><th>Uses</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
         <tbody id="cp-tbody"></tbody></table>
       </div>
     </div>
@@ -963,7 +965,17 @@ function couponIsInDateWindow(c,todayStr){
   if(c.validUntil && t > c.validUntil) return false;
   return true;
 }
-function couponIsUsable(c){ return !!c.active && couponIsInDateWindow(c); }
+// Number of times a coupon has actually been used — counted live from
+// bookings rather than stored as a separate counter, so it can never get
+// out of sync (e.g. if a booking using the coupon gets cancelled, that
+// use is freed back up automatically).
+function couponUsageCount(c){
+  return bookings.filter(b=>b.coupon===c.code && b.status!=='Cancelled').length;
+}
+function couponLimitReached(c){
+  return !!c.maxUses && couponUsageCount(c) >= c.maxUses;
+}
+function couponIsUsable(c){ return !!c.active && couponIsInDateWindow(c) && !couponLimitReached(c); }
 function couponPeriodLabel(c){
   if(!c.validFrom && !c.validUntil) return 'No expiry';
   if(c.validFrom && c.validUntil) return fmtDate(c.validFrom)+' – '+fmtDate(c.validUntil);
@@ -976,17 +988,22 @@ function renderCoupons(){
     const discPrice = couponPrice(c);
     const expired = c.validUntil && today > c.validUntil;
     const notYetStarted = c.validFrom && today < c.validFrom;
+    const used = couponUsageCount(c);
+    const limitReached = couponLimitReached(c);
     let statusHtml;
     if(!c.active){ statusHtml = `<span class="ctag off">○ DISABLED</span>`; }
     else if(expired){ statusHtml = `<span class="ctag exp">⏱ EXPIRED</span>`; }
+    else if(limitReached){ statusHtml = `<span class="ctag exp">🚫 LIMIT REACHED</span>`; }
     else if(notYetStarted){ statusHtml = `<span class="ctag off">◷ NOT STARTED</span>`; }
     else{ statusHtml = `<span class="ctag">● ACTIVE</span>`; }
+    const usesHtml = c.maxUses ? `${used} / ${c.maxUses}` : `${used} <span style="color:rgba(255,255,255,0.28);">(unlimited)</span>`;
     return `<tr>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;font-weight:700;letter-spacing:1px;">${c.code}<button class="copy-mini" onclick="copyCoupon('${c.code}')">Copy</button></td>
       <td>${c.percent}% off</td>
       <td style="font-family:Rajdhani,sans-serif;color:#4dd97a;">Rs. ${discPrice.toLocaleString()}${c.priceOverride?' <span style="color:rgba(255,255,255,0.3);font-size:10px;">(manual)</span>':''}</td>
       <td>${c.note||'—'}</td>
       <td style="font-size:11.5px;color:rgba(255,255,255,0.55);">${couponPeriodLabel(c)}</td>
+      <td style="font-size:12px;">${usesHtml}</td>
       <td>${statusHtml}</td>
       <td>${fmtDate(c.created)}</td>
       <td>
@@ -994,7 +1011,7 @@ function renderCoupons(){
         <button class="act-btn red" onclick="deleteCoupon('${c.id}')">Delete</button>
       </td>
     </tr>`;
-  }).join('') : '<tr><td colspan="8" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No coupons yet — create one above</td></tr>';
+  }).join('') : '<tr><td colspan="9" style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);">No coupons yet — create one above</td></tr>';
 }
 function copyCoupon(code){
   navigator.clipboard.writeText(code).then(()=>showToast('Copied "'+code+'"')).catch(()=>showToast('Could not copy'));
@@ -1021,6 +1038,8 @@ async function addCoupon(){
   const note=document.getElementById('cp-note').value.trim();
   const validFrom=document.getElementById('cp-valid-from').value || null;
   const validUntil=document.getElementById('cp-valid-until').value || null;
+  const maxUsesInput=document.getElementById('cp-maxuses').value;
+  const maxUses=parseInt(maxUsesInput,10) || null;
   const err=document.getElementById('cp-err');
   const percent=parseInt(percentInput,10);
   const price=parseInt(priceInput,10);
@@ -1029,14 +1048,15 @@ async function addCoupon(){
   if(price>0 && price>=PRICE){ err.textContent='Manual price must be less than the base price (Rs. '+PRICE+').'; err.style.display='block'; return; }
   if(coupons.some(c=>c.code===code)){ err.textContent='A coupon with this code already exists.'; err.style.display='block'; return; }
   if(validFrom && validUntil && validFrom>validUntil){ err.textContent='"Valid From" must be before "Valid Until".'; err.style.display='block'; return; }
+  if(maxUsesInput && (!maxUses || maxUses<=0)){ err.textContent='Max Uses must be a positive number, or left blank for unlimited.'; err.style.display='block'; return; }
   err.style.display='none';
   const finalPercent = percent>0 ? percent : Math.round((1-price/PRICE)*100);
   const priceOverride = price>0 ? price : null;
-  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent:finalPercent,priceOverride,note,validFrom,validUntil,active:true,created:new Date().toISOString().split('T')[0]});
+  coupons.push({id:'CP'+String(Date.now()).slice(-6),code,percent:finalPercent,priceOverride,note,validFrom,validUntil,maxUses,active:true,created:new Date().toISOString().split('T')[0]});
   try{
     await saveData();
     document.getElementById('cp-code').value=''; document.getElementById('cp-percent').value=''; document.getElementById('cp-price').value=''; document.getElementById('cp-note').value='';
-    document.getElementById('cp-valid-from').value=''; document.getElementById('cp-valid-until').value='';
+    document.getElementById('cp-valid-from').value=''; document.getElementById('cp-valid-until').value=''; document.getElementById('cp-maxuses').value='';
     renderCoupons();
     showToast('Coupon "'+code+'" created — Rs. '+couponPrice(coupons[coupons.length-1])+' / seat');
   }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
