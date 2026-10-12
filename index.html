@@ -71,13 +71,13 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .rt{background:rgba(0,0,0,0.3);border:1px solid rgba(45,189,85,0.2);border-radius:6px;padding:5px 12px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.4);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
 .rt.sel{background:rgba(34,145,63,0.25);color:#4dd97a;border-color:rgba(77,217,122,0.4);}
 .sm-body{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
-.a-bus{background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.2);border-radius:12px;padding:16px;max-width:320px;}
+.a-bus{background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.2);border-radius:12px;padding:16px;max-width:340px;}
 .a-nose{text-align:center;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:#4dd97a;border-bottom:2px solid rgba(45,189,85,0.3);padding-bottom:8px;margin-bottom:10px;text-transform:uppercase;}
 .a-grid{display:flex;}
-.a-lcol{display:flex;flex-direction:column;gap:5px;width:90px;}
+.a-lcol{display:flex;flex-direction:column;gap:5px;width:130px;}
 .a-ai{width:24px;display:flex;align-items:center;justify-content:center;}
 .a-ailbl{writing-mode:vertical-rl;font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:1px;font-family:'Rajdhani',sans-serif;text-transform:uppercase;}
-.a-rcol{display:flex;flex-direction:column;gap:5px;width:40px;}
+.a-rcol{display:flex;flex-direction:column;gap:5px;width:56px;}
 .a-pair{display:flex;gap:5px;}
 .a-pair .aseat{flex:1;}
 .aseat{height:36px;border:1px solid rgba(45,189,85,0.28);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'Rajdhani',sans-serif;cursor:pointer;color:rgba(255,255,255,0.5);background:rgba(0,0,0,0.25);transition:all 0.15s;width:100%;position:relative;}
@@ -332,7 +332,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
               <div class="a-sl-row" id="a-sl-row" style="border-top:2px solid rgba(45,189,85,0.2);margin-top:10px;padding-top:10px;"></div>
               <div style="text-align:center;font-size:9px;font-family:Rajdhani,sans-serif;color:rgba(255,255,255,0.22);letter-spacing:2px;margin-bottom:4px;margin-top:6px;text-transform:uppercase;">Sleeper Berths</div>
             </div>
-            <div class="sm-legend" style="max-width:300px;margin-top:10px;">
+            <div class="sm-legend" style="max-width:340px;margin-top:10px;">
               <div class="sml"><div class="sml-dot" style="background:rgba(0,0,0,0.3);border:1px solid rgba(45,189,85,0.28);"></div>Free</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(45,189,85,0.2);border:1px solid rgba(77,217,122,0.45);"></div>Confirmed</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(240,185,123,0.14);border:1px solid rgba(240,185,123,0.35);"></div>Pending</div>
@@ -346,11 +346,11 @@ tr:hover td{background:rgba(45,189,85,0.04);}
             </div>
             <div class="info-card">
               <div class="ic-title">Summary</div>
-              <div class="ic-row"><span>Total Seats</span><span>29</span></div>
+              <div class="ic-row"><span>Total Seats</span><span id="sm-total">37</span></div>
               <div class="ic-row"><span>Confirmed</span><span id="sm-conf" style="color:#4dd97a;">0</span></div>
               <div class="ic-row"><span>Pending</span><span id="sm-pend" style="color:#f0b97b;">0</span></div>
               <div class="ic-row"><span>Admin Reserved</span><span id="sm-admin" style="color:#f0a030;">0</span></div>
-              <div class="ic-row"><span>Available</span><span id="sm-avail">29</span></div>
+              <div class="ic-row"><span>Available</span><span id="sm-avail">37</span></div>
             </div>
           </div>
         </div>
@@ -410,7 +410,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="a-email" placeholder="email@example.com"></div>
           <div class="fg"><label>Route</label><select id="a-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
           <div class="fg"><label>Travel Date</label><input type="date" id="a-date"></div>
-          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. B1, A2, SP1"></div>
+          <div class="fg"><label>Seats (comma separated)</label><input type="text" id="a-seats" placeholder="e.g. B1, A2, SP1, B-KAA"></div>
           <div class="fg"><label>Status</label><select id="a-status"><option>Pending</option><option>Confirmed</option></select></div>
           <div class="fg"><label>Notes</label><input type="text" id="a-notes" placeholder="Optional notes"></div>
         </div>
@@ -512,7 +512,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
       <div class="fg" style="grid-column:1/-1"><label>Email</label><input type="email" id="m-email" placeholder="email@example.com"></div>
       <div class="fg"><label>Route</label><select id="m-route"><option>Dharan → Pokhara</option><option>Pokhara → Dharan</option><option>Itahari → Pokhara</option></select></div>
       <div class="fg"><label>Travel Date</label><input type="date" id="m-date"></div>
-      <div class="fg"><label>Seats (e.g. B1, A2, SP1)</label><input type="text" id="m-seats" placeholder="B1, A2"></div>
+      <div class="fg"><label>Seats (e.g. B1, A2, SP1, B-KAA)</label><input type="text" id="m-seats" placeholder="B1, A2"></div>
       <div class="fg"><label>Status</label><select id="m-status"><option>Pending</option><option>Confirmed</option></select></div>
       <div class="fg"><label>Notes</label><input type="text" id="m-notes" placeholder="Optional"></div>
     </div>
@@ -603,6 +603,42 @@ function savePriceConfig(){
   refreshAll();
 }
 
+// ── Seat layout (same as booking site) ──
+const LEFT_SEATS  = ['J1','J2','B-KAA','B-KHA', ...Array.from({length:18},(_,i)=>'B'+(i+1))];
+const RIGHT_SEATS = ['SP1','SP2', ...Array.from({length:9},(_,i)=>'A'+(i+1))];
+const SLEEPERS    = ['BS1','BS2','AS1','AS2'];
+const SEAT_ORDER  = [...LEFT_SEATS, ...RIGHT_SEATS, ...SLEEPERS];
+const TOTAL_SEATS = SEAT_ORDER.length; // 37
+
+// Old seat names → new names (same mapping the booking site uses)
+function legacySeat(s){
+  s=String(s); let m;
+  if(s==='SP1') return 'BS1';
+  if(s==='SP2') return 'BS2';
+  if(s==='A1')  return 'SP1';
+  if(s==='A2')  return 'SP2';
+  if((m=s.match(/^A(\d+)$/))) return 'A'+(parseInt(m[1],10)-2);
+  const fixed={B1:'J1',B2:'J2',B3:'B-KAA',B4:'B-KHA'};
+  if(fixed[s]) return fixed[s];
+  if((m=s.match(/^B(\d+)$/))) return 'B'+(parseInt(m[1],10)-4);
+  return s;
+}
+function migrateSeats(list){
+  list.forEach(b=>{
+    if(b.seatVer!==2){ b.seats=(b.seats||[]).map(legacySeat); b.seatVer=2; }
+  });
+}
+function seatRank(id){ const i=SEAT_ORDER.indexOf(String(id)); return i<0?9999:i; }
+function sortSeats(a){ return [...a].sort((x,y)=>seatRank(x)-seatRank(y)); }
+// Parse "b1, a2, sp1" → valid uppercase seat IDs
+function parseSeats(str){
+  const seats=[],bad=[];
+  str.split(',').map(s=>s.trim().toUpperCase()).filter(Boolean).forEach(s=>{
+    (SEAT_ORDER.includes(s)?seats:bad).push(s);
+  });
+  return {seats,bad};
+}
+
 function classifyNetworkError(e, res){
   if(e instanceof TypeError){
     return { kind:'network', message:'Failed to fetch', hint:'The request to api.jsonbin.io never got a response. This is almost always caused by: (1) an ad-blocker or privacy extension blocking the domain, (2) no internet connection, or (3) a network/firewall blocking that domain.' };
@@ -629,6 +665,7 @@ async function loadData(){
   catch(e){ throw classifyNetworkError(e,null); }
   if(!res.ok) throw classifyNetworkError(null,res);
   const d=await res.json(); bookings=d.record.bookings||[]; coupons=d.record.coupons||[];
+  migrateSeats(bookings);
 }
 async function saveData(){
   const id=await getBinId();
@@ -661,7 +698,7 @@ function nav(page,el){
 }
 
 function fmtDate(d){ try{ return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){ return d||'—'; } }
-function fmtSeats(a){ return Array.isArray(a)?a.join(', '):(a||'—'); }
+function fmtSeats(a){ return Array.isArray(a)?sortSeats(a).join(', '):(a||'—'); }
 function statusBadge(s){
   const m={Confirmed:'bc',Pending:'bp',Cancelled:'bx',AdminReserved:'ba'};
   const lbl={AdminReserved:'Reserved'};
@@ -780,30 +817,32 @@ function renderSeatMap(){
   const aiCol=document.createElement('div'); aiCol.className='a-ai';
   const aiLbl=document.createElement('div'); aiLbl.className='a-ailbl'; aiLbl.textContent='AISLE'; aiCol.appendChild(aiLbl);
   const rCol=document.createElement('div'); rCol.className='a-rcol';
-  for(let row=0;row<9;row++){
-    const la='B'+(row*2+1), lb='B'+(row*2+2), rc='A'+(row+1);
+  for(let row=0;row<11;row++){
     const pair=document.createElement('div'); pair.className='a-pair';
-    pair.appendChild(mkAdminSeat(la,conf,pend,adminRes,mapDate));
-    pair.appendChild(mkAdminSeat(lb,conf,pend,adminRes,mapDate));
+    pair.appendChild(mkAdminSeat(LEFT_SEATS[row*2],conf,pend,adminRes,mapDate));
+    pair.appendChild(mkAdminSeat(LEFT_SEATS[row*2+1],conf,pend,adminRes,mapDate));
     lCol.appendChild(pair);
-    rCol.appendChild(mkAdminSeat(rc,conf,pend,adminRes,mapDate));
+    rCol.appendChild(mkAdminSeat(RIGHT_SEATS[row],conf,pend,adminRes,mapDate));
   }
   grid.appendChild(lCol); grid.appendChild(aiCol); grid.appendChild(rCol);
+
   const slRow=document.getElementById('a-sl-row'); slRow.innerHTML='';
-  for(let s=1;s<=2;s++){
-    const id='SP'+s,el=document.createElement('div');
+  SLEEPERS.forEach((id,i)=>{
     const isCon=conf.has(id),isPend=pend.has(id),isAdmin=adminRes.has(id);
+    const el=document.createElement('div');
     el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'');
-    el.style.cssText='flex:1;height:44px;flex-direction:column;gap:2px;display:flex;';
-    el.innerHTML=`<span style="font-size:13px">🛏</span><span>${id}</span>`;
+    el.style.cssText='flex:1;height:44px;flex-direction:column;gap:2px;display:flex;align-items:center;justify-content:center;'+(i===2?'margin-left:10px;':'');
+    el.innerHTML=`<span style="font-size:13px">🛏</span><span style="font-size:10px">${id}</span>`;
     el.onclick=()=>handleSeatClick(id,isCon,isPend,isAdmin,mapDate);
     slRow.appendChild(el);
-  }
-  const tot=29, taken=conf.size+pend.size+adminRes.size;
+  });
+
+  const taken=conf.size+pend.size+adminRes.size;
+  document.getElementById('sm-total').textContent=TOTAL_SEATS;
   document.getElementById('sm-conf').textContent=conf.size;
   document.getElementById('sm-pend').textContent=pend.size;
   document.getElementById('sm-admin').textContent=adminRes.size;
-  document.getElementById('sm-avail').textContent=tot-taken;
+  document.getElementById('sm-avail').textContent=TOTAL_SEATS-taken;
 }
 
 function mkAdminSeat(id,conf,pend,adminRes,mapDate){
@@ -811,6 +850,7 @@ function mkAdminSeat(id,conf,pend,adminRes,mapDate){
   const sid=String(id);
   const isCon=conf.has(sid),isPend=pend.has(sid),isAdmin=adminRes.has(sid);
   el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'');
+  if(sid.length>3) el.style.fontSize='8.5px';
   el.textContent=id;
   el.onclick=()=>handleSeatClick(sid,isCon,isPend,isAdmin,mapDate);
   return el;
@@ -846,7 +886,7 @@ async function confirmReserve(){
   bookings.push({
     id:newId, name,phone:phone||'—',email:'',
     route:pendingReserve.route,date:pendingReserve.date,
-    seats:[pendingReserve.seatId], status:'AdminReserved', isAdminBlock:true,
+    seats:[pendingReserve.seatId], seatVer:2, status:'AdminReserved', isAdminBlock:true,
     notes:notes||'Reserved by admin', created:new Date().toISOString().split('T')[0]
   });
   try{ await saveData(); renderSeatMap(); refreshAll(); showToast('Seat '+pendingReserve.seatId+' reserved for '+name+'!'); }
@@ -1190,12 +1230,15 @@ async function changeStatus(id,status){
 async function addBooking(){
   const name=document.getElementById('a-name').value.trim(),phone=document.getElementById('a-phone').value.trim();
   const email=document.getElementById('a-email').value.trim(),route=document.getElementById('a-route').value;
-  const date=document.getElementById('a-date').value,seats=document.getElementById('a-seats').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const date=document.getElementById('a-date').value;
+  const parsed=parseSeats(document.getElementById('a-seats').value);
+  const seats=parsed.seats;
   const status=document.getElementById('a-status').value,notes=document.getElementById('a-notes').value.trim();
   const err=document.getElementById('add-err');
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
+  if(parsed.bad.length){ err.textContent='Unknown seat(s): '+parsed.bad.join(', '); err.style.display='block'; return; }
   err.style.display='none';
-  bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
+  bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,seatVer:2,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
   try{ await saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 function clearAddForm(){ ['a-name','a-phone','a-email','a-date','a-seats','a-notes'].forEach(id=>document.getElementById(id).value=''); document.getElementById('add-err').style.display='none'; }
@@ -1206,12 +1249,15 @@ document.getElementById('add-modal').addEventListener('click',function(e){ if(e.
 async function saveModalBooking(){
   const name=document.getElementById('m-name').value.trim(),phone=document.getElementById('m-phone').value.trim();
   const email=document.getElementById('m-email').value.trim(),route=document.getElementById('m-route').value;
-  const date=document.getElementById('m-date').value,seats=document.getElementById('m-seats').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const date=document.getElementById('m-date').value;
+  const parsed=parseSeats(document.getElementById('m-seats').value);
+  const seats=parsed.seats;
   const status=document.getElementById('m-status').value,notes=document.getElementById('m-notes').value.trim();
   const err=document.getElementById('m-err');
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
+  if(parsed.bad.length){ err.textContent='Unknown seat(s): '+parsed.bad.join(', '); err.style.display='block'; return; }
   err.style.display='none';
-  bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
+  bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,seatVer:2,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
   try{ await saveData(); ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id=>document.getElementById(id).value=''); closeAddModal(); refreshAll(); showToast('Booking added!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
 
