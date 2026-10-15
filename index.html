@@ -162,12 +162,43 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .copy-mini:hover{background:rgba(45,189,85,0.15);}
 .coupon-chip{display:inline-block;background:rgba(45,189,85,0.15);color:#4dd97a;border:1px solid rgba(45,189,85,0.3);border-radius:20px;padding:2px 9px;font-size:10.5px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.5px;}
 .price-strike{color:rgba(255,255,255,0.28);text-decoration:line-through;font-size:11px;margin-right:5px;}
-.login-screen{position:fixed;inset:0;background:#0b1a0f;z-index:1000;display:flex;align-items:center;justify-content:center;}
+
+/* ═══ ANIMATED LOCK SCREEN ═══ */
+.login-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#12301a 0%,#0b1a0f 60%,#061009 100%);z-index:1000;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .login-screen.hide{display:none;}
-.login-box{background:#0d1f12;border:1px solid rgba(45,189,85,0.25);border-radius:14px;padding:32px;width:340px;max-width:90vw;}
-.login-brand{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#fff;text-align:center;}
+.lg-orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;animation:orbFloat 12s ease-in-out infinite;pointer-events:none;}
+.lg-orb.o1{width:340px;height:340px;background:#22913f;top:-80px;left:-80px;}
+.lg-orb.o2{width:300px;height:300px;background:#4dd97a;bottom:-100px;right:-60px;animation-delay:-5s;}
+.lg-orb.o3{width:200px;height:200px;background:#1a7a35;top:45%;left:62%;animation-delay:-8s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.15)}66%{transform:translate(-30px,40px) scale(.9)}}
+.lg-road{position:absolute;left:0;right:0;bottom:0;height:90px;background:rgba(0,0,0,.35);border-top:1px solid rgba(45,189,85,.2);pointer-events:none;}
+.lg-road::before{content:'';position:absolute;left:0;right:0;top:55%;height:3px;background:repeating-linear-gradient(90deg,rgba(77,217,122,.5) 0 40px,transparent 40px 80px);animation:roadMove 1s linear infinite;}
+@keyframes roadMove{to{background-position:-80px 0}}
+.lg-bus{position:absolute;bottom:48px;left:-90px;font-size:44px;animation:busDrive 14s linear infinite;pointer-events:none;filter:drop-shadow(0 0 12px rgba(77,217,122,.5));}
+@keyframes busDrive{from{transform:translateX(0) scaleX(-1)}to{transform:translateX(calc(100vw + 180px)) scaleX(-1)}}
+.login-box{position:relative;background:rgba(13,31,18,.88);backdrop-filter:blur(8px);border:1px solid rgba(45,189,85,.3);border-radius:16px;padding:34px 32px 30px;width:350px;max-width:90vw;animation:cardIn .7s cubic-bezier(.2,.9,.3,1.1) both,glowPulse 3.5s ease-in-out infinite 1s;}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 18px rgba(45,189,85,.12)}50%{box-shadow:0 0 38px rgba(77,217,122,.32)}}
+.login-box.shake{animation:shake .45s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+.login-logo{width:58px;height:58px;margin:0 auto 12px;border-radius:50%;background:rgba(45,189,85,.12);border:1px solid rgba(77,217,122,.4);display:flex;align-items:center;justify-content:center;font-size:28px;animation:logoBounce 2.4s ease-in-out infinite;}
+@keyframes logoBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.login-brand{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#fff;text-align:center;}
 .login-brand span{color:#4dd97a;}
-.login-sub{text-align:center;font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:22px;margin-top:4px;}
+.login-sub{text-align:center;font-size:12px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;margin-top:4px;}
+.login-box .fg{animation:fadeUp .6s ease both;}
+.login-box .fg:nth-of-type(1){animation-delay:.35s;}
+.login-box .fg:nth-of-type(2){animation-delay:.5s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.login-box .fg input:focus{box-shadow:0 0 0 3px rgba(77,217,122,.15);}
+.lg-pw{position:relative;}
+.lg-pw input{width:100%;padding-right:38px;}
+.lg-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:15px;}
+.lg-eye:hover{color:#4dd97a;}
+.lg-btn{position:relative;overflow:hidden;animation:fadeUp .6s ease both .65s;}
+.lg-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2.8s ease-in-out infinite 1.5s;}
+@keyframes shimmer{to{left:160%}}
+
 @media (max-width: 860px){
   .sidebar{transform:translateX(-100%);box-shadow:20px 0 40px rgba(0,0,0,0.4);}
   .sidebar.open{transform:translateX(0);}
@@ -207,13 +238,19 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 <body>
 
 <div class="login-screen" id="login-screen">
-  <div class="login-box">
+  <div class="lg-orb o1"></div><div class="lg-orb o2"></div><div class="lg-orb o3"></div>
+  <div class="lg-bus">🚌</div>
+  <div class="lg-road"></div>
+  <div class="login-box" id="login-box">
+    <div class="login-logo">🚌</div>
     <div class="login-brand">Sambriddhi <span>Air</span></div>
     <div class="login-sub">Admin Panel Login</div>
     <div class="fg"><label>Username</label><input type="text" id="login-user" placeholder="Username" autocomplete="username"></div>
-    <div class="fg"><label>Password</label><input type="password" id="login-pass" placeholder="Password" autocomplete="current-password"></div>
+    <div class="fg"><label>Password</label>
+      <div class="lg-pw"><input type="password" id="login-pass" placeholder="Password" autocomplete="current-password"><button type="button" class="lg-eye" onclick="togglePw()">👁</button></div>
+    </div>
     <div id="login-err" style="color:#f0997b;font-size:12px;margin-bottom:10px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
-    <button class="m-btn m-btn-g" style="width:100%;" onclick="attemptLogin()">Login</button>
+    <button class="m-btn m-btn-g lg-btn" style="width:100%;" onclick="attemptLogin()">Login</button>
   </div>
 </div>
 
@@ -539,6 +576,7 @@ function attemptLogin(){
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
   const err = document.getElementById('login-err');
+  const box = document.getElementById('login-box');
   if(u === ADMIN_USERNAME && p === ADMIN_PASSWORD){
     sessionStorage.setItem(AUTH_KEY, '1');
     document.getElementById('login-screen').classList.add('hide');
@@ -546,7 +584,12 @@ function attemptLogin(){
   } else {
     err.textContent = 'Invalid username or password.';
     err.style.display = 'block';
+    box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
   }
+}
+function togglePw(){
+  const i = document.getElementById('login-pass');
+  i.type = i.type === 'password' ? 'text' : 'password';
 }
 document.addEventListener('keydown', function(e){
   const screen = document.getElementById('login-screen');
