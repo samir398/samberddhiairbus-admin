@@ -186,6 +186,12 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .coupon-chip{display:inline-block;background:rgba(45,189,85,0.15);color:#4dd97a;border:1px solid rgba(45,189,85,0.3);border-radius:20px;padding:2px 9px;font-size:10.5px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.5px;}
 .price-strike{color:rgba(255,255,255,0.28);text-decoration:line-through;font-size:11px;margin-right:5px;}
 
+.seat-pop{position:fixed;left:50%;bottom:18px;transform:translate(-50%,160%);z-index:150;background:#0d1f12;border:1px solid rgba(90,169,255,.5);border-radius:14px;padding:12px 14px;box-shadow:0 10px 40px rgba(0,0,0,.65);width:min(560px,94vw);transition:transform .25s ease;font-size:13px;}
+.seat-pop.show{transform:translate(-50%,0);}
+.sp-btns{display:flex;gap:8px;margin-top:10px;}
+.sp-btns .m-btn{min-width:0;padding:10px 6px;}
+.sp-btns .sp-x{flex:0 0 46px;}
+
 /* ═══ ANIMATED LOCK SCREEN ═══ */
 .login-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#12301a 0%,#0b1a0f 60%,#061009 100%);z-index:1000;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .login-screen.hide{display:none;}
@@ -376,20 +382,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
             <input type="date" id="map-date" style="background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 10px;font-size:12px;color:#fff;outline:none;font-family:Nunito,sans-serif;width:auto;" onchange="renderSeatMap()">
           </div>
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
-          <span style="font-size:11px;font-family:Rajdhani,sans-serif;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);">Mode:</span>
-          <button id="mb-release" class="mode-btn inactive" onclick="setClickMode('release')">✓ Release</button>
-          <button id="mb-reserve" class="mode-btn active-reserve" onclick="setClickMode('reserve')">🔒 Reserve</button>
-          <button id="mb-book" class="mode-btn inactive" onclick="setClickMode('book')">🎟 Book</button>
-        </div>
-        <div class="inst-banner show" id="inst-banner">🔒 Reserve: tap a free seat to hold it for a customer.</div>
-        <div class="book-bar" id="book-bar">
-          <div id="bb-text"></div>
-          <div style="display:flex;gap:8px;">
-            <button class="m-btn m-btn-x" onclick="bkClear()">Clear</button>
-            <button class="m-btn m-btn-b" id="bb-go" onclick="bkOpen()">Continue →</button>
-          </div>
-        </div>
+        <div class="inst-banner show" id="inst-banner">👆 Tap one or more seats. A menu pops up at the bottom with Release, Reserve and Book.</div>
         <div class="sm-body">
           <div>
             <div class="a-bus">
@@ -564,7 +557,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="fg"><label>Notes (optional)</label><input type="text" id="r-notes" placeholder="e.g. paid cash, held for agent"></div>
     <div id="r-err" style="color:#f0997b;font-size:12px;margin-bottom:8px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
     <div class="modal-btns">
-      <button class="m-btn m-btn-o" onclick="confirmReserve()">🔒 Confirm Reserve</button>
+      <button class="m-btn m-btn-o" onclick="confirmReserve()">🔒 Reserve</button>
       <button class="m-btn m-btn-x" onclick="closeReserveModal()">Cancel</button>
     </div>
   </div>
@@ -593,6 +586,16 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 
 <div class="modal-bg" id="book-modal"><div class="modal" style="width:520px" id="bk-box"></div></div>
 <div class="modal-bg" id="tk-modal"><div class="modal" style="width:440px" id="tk-box"></div></div>
+
+<div class="seat-pop" id="seat-pop">
+  <div id="sp-text"></div>
+  <div class="sp-btns">
+    <button class="m-btn m-btn-g" onclick="spRelease()">✓ Release</button>
+    <button class="m-btn m-btn-o" onclick="spReserve()">🔒 Reserve</button>
+    <button class="m-btn m-btn-b" onclick="bkOpen()">🎟 Book</button>
+    <button class="m-btn m-btn-x sp-x" onclick="bkClear()">✕</button>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -765,6 +768,8 @@ function nav(page,el){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('v-'+page).classList.add('active');
+  if(page!=='seatmap') selSeats.clear();
+  updatePop();
   if(el) el.classList.add('active');
   const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',coupons:'Coupons',settings:'Settings'};
   const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Release, reserve or book seats',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
@@ -866,32 +871,17 @@ function searchBkgs(){ renderBookings(curFilter,document.getElementById('search-
 
 function switchMapRoute(r,el){ curMapRoute=r; document.querySelectorAll('.rt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); renderSeatMap(); }
 
-// ═══ SEAT MAP MODES: Release / Reserve / Book ═══
-function setClickMode(mode){
-  clickMode=mode;
-  const cls={release:'active-free',reserve:'active-reserve',book:'active-book'};
-  ['release','reserve','book'].forEach(k=>$('mb-'+k).className='mode-btn '+(k===mode?cls[k]:'inactive'));
-  const msg={
-    release:'✓ Release: tap a Reserved (orange) seat to free it.',
-    reserve:'🔒 Reserve: tap a free seat to hold it for a customer.',
-    book:'🎟 Book: tap one or more seats, then press Continue to fill the form and make the ticket.'};
-  const b=$('inst-banner');
-  b.className='inst-banner show'; b.removeAttribute('style'); b.textContent=msg[mode];
-  if(mode==='release'){ b.style.background='rgba(45,189,85,0.08)'; b.style.borderColor='rgba(45,189,85,0.25)'; b.style.color='rgba(150,255,180,0.75)'; }
-  if(mode==='book'){ b.style.background='rgba(45,140,255,0.1)'; b.style.borderColor='rgba(90,169,255,0.3)'; b.style.color='#9cc8ff'; }
-  if(mode!=='book') selSeats.clear();
-  updateBookBar();
-  renderSeatMap();
-}
-function updateBookBar(){
-  const bar=$('book-bar');
-  if(clickMode!=='book'){ bar.style.display='none'; return; }
+// ═══ SEAT MAP: select seats → bottom popup (Release / Reserve / Book) ═══
+function updatePop(){
+  const pop=$('seat-pop');
   const a=sortSeats([...selSeats]);
-  bar.style.display='flex';
-  $('bb-text').innerHTML=a.length?`<b>${a.join(', ')}</b> · ${a.length} seat(s) · Rs. ${(a.length*PRICE).toLocaleString()}`:'Tap free seats on the map to select them';
-  $('bb-go').disabled=!a.length;
+  const onMap=$('v-seatmap').classList.contains('active');
+  if(!a.length||!onMap){ pop.classList.remove('show'); return; }
+  $('sp-text').innerHTML=`<b>${a.join(', ')}</b> · ${a.length} seat(s) selected · ${curMapRoute} · ${fmtDate($('map-date').value)}`;
+  pop.classList.add('show');
 }
-function bkClear(){ selSeats.clear(); updateBookBar(); renderSeatMap(); }
+function updateBookBar(){ updatePop(); }
+function bkClear(){ selSeats.clear(); updatePop(); renderSeatMap(); }
 
 function getSeatStates(routeStr,date){
   const conf=new Set(),pend=new Set(),adminRes=new Set();
@@ -958,46 +948,54 @@ function mkAdminSeat(id,conf,pend,adminRes,mapDate){
   return el;
 }
 
-function handleSeatClick(sid,isCon,isPend,isAdmin,mapDate){
-  const mapDateVal=document.getElementById('map-date').value;
-  // taken seats always show their info
+function handleSeatClick(sid,isCon,isPend,isAdmin){
+  // booked seats show their info; free / reserved seats can be selected
   if(isCon||isPend){ showSeatInfo(sid); return; }
-  if(clickMode==='book'){
-    selSeats.has(sid)?selSeats.delete(sid):selSeats.add(sid);
-    updateBookBar(); renderSeatMap(); return;
-  }
-  if(clickMode==='reserve'){
-    if(isAdmin){ showToast('Seat '+sid+' is already reserved. Use Release to free it.'); return; }
-    pendingReserve={seatId:sid,date:mapDateVal,route:curMapRoute};
-    document.getElementById('reserve-title').textContent='Reserve Seat '+sid+' — '+curMapRoute+' — '+fmtDate(mapDateVal);
-    document.getElementById('r-name').value=''; document.getElementById('r-phone').value=''; document.getElementById('r-notes').value='';
-    document.getElementById('r-err').style.display='none';
-    document.getElementById('reserve-modal').classList.add('open');
-    return;
-  }
-  if(clickMode==='release'){
-    if(!isAdmin){ showToast('Seat '+sid+' is not reserved. Nothing to release.'); return; }
-    freeSeat(sid,mapDateVal);
-  }
+  selSeats.has(sid)?selSeats.delete(sid):selSeats.add(sid);
+  updatePop(); renderSeatMap();
+}
+
+async function spRelease(){
+  const d=$('map-date').value;
+  const {adminRes}=getSeatStates(curMapRoute,d);
+  const seats=[...selSeats].filter(s=>adminRes.has(s));
+  if(!seats.length){ showToast('None of the selected seats are reserved.'); return; }
+  const set=new Set(seats), prev=bookings;
+  bookings=bookings.filter(b=>!(b.status==='AdminReserved'&&b.route===curMapRoute&&b.date===d&&b.seats.some(s=>set.has(String(s)))));
+  try{ await saveData(); selSeats.clear(); updatePop(); renderSeatMap(); refreshAll(); showToast(seats.length+' seat(s) released.'); }
+  catch(e){ bookings=prev; showToast((e&&e.hint)?('Error: '+e.message):'Error saving'); }
+}
+
+function spReserve(){
+  const d=$('map-date').value;
+  const {adminRes}=getSeatStates(curMapRoute,d);
+  const seats=sortSeats([...selSeats]);
+  if(!seats.length) return;
+  if(seats.some(s=>adminRes.has(s))){ showToast('Some selected seats are already reserved. Deselect them first.'); return; }
+  pendingReserve={seats,date:d,route:curMapRoute};
+  $('reserve-title').textContent='Reserve '+seats.join(', ')+' — '+curMapRoute+' — '+fmtDate(d);
+  $('r-name').value=''; $('r-phone').value=''; $('r-notes').value='';
+  $('r-err').style.display='none';
+  $('reserve-modal').classList.add('open');
 }
 
 async function confirmReserve(){
-  const name=document.getElementById('r-name').value.trim();
-  const phone=document.getElementById('r-phone').value.trim();
-  const notes=document.getElementById('r-notes').value.trim();
-  if(!name){ document.getElementById('r-err').textContent='Please enter a name.'; document.getElementById('r-err').style.display='block'; return; }
-  document.getElementById('r-err').style.display='none';
+  const name=$('r-name').value.trim(), phone=$('r-phone').value.trim(), notes=$('r-notes').value.trim();
+  if(!name){ $('r-err').textContent='Please enter a name.'; $('r-err').style.display='block'; return; }
+  $('r-err').style.display='none';
   closeReserveModal();
-  showToast('Reserving seat…');
-  const newId='ADM'+String(Date.now()).slice(-5);
-  bookings.push({
-    id:newId, name,phone:phone||'—',email:'',
-    route:pendingReserve.route,date:pendingReserve.date,
-    seats:[pendingReserve.seatId], seatVer:2, status:'AdminReserved', isAdminBlock:true,
-    notes:notes||'Reserved by admin', created:new Date().toISOString().split('T')[0]
+  const prev=bookings, base=String(Date.now()).slice(-5);
+  pendingReserve.seats.forEach((s,i)=>{
+    bookings.push({
+      id:'ADM'+base+(i?'-'+i:''), name, phone:phone||'—', email:'',
+      route:pendingReserve.route, date:pendingReserve.date,
+      seats:[s], seatVer:2, status:'AdminReserved', isAdminBlock:true,
+      notes:notes||'Reserved by admin', created:new Date().toISOString().split('T')[0]
+    });
   });
-  try{ await saveData(); renderSeatMap(); refreshAll(); showToast('Seat '+pendingReserve.seatId+' reserved for '+name+'!'); }
-  catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Error saving — try again'); }
+  const n=pendingReserve.seats.length;
+  try{ await saveData(); selSeats.clear(); updatePop(); renderSeatMap(); refreshAll(); showToast(n+' seat(s) reserved for '+name+'!'); }
+  catch(e){ bookings=prev; showToast((e&&e.hint)?('Error: '+e.message):'Error saving — try again'); }
 }
 
 async function freeSeat(sid,mapDate){
