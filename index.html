@@ -966,35 +966,22 @@ async function spRelease(){
   catch(e){ bookings=prev; showToast((e&&e.hint)?('Error: '+e.message):'Error saving'); }
 }
 
-function spReserve(){
+async function spReserve(){
   const d=$('map-date').value;
   const {adminRes}=getSeatStates(curMapRoute,d);
   const seats=sortSeats([...selSeats]);
   if(!seats.length) return;
   if(seats.some(s=>adminRes.has(s))){ showToast('Some selected seats are already reserved. Deselect them first.'); return; }
-  pendingReserve={seats,date:d,route:curMapRoute};
-  $('reserve-title').textContent='Reserve '+seats.join(', ')+' — '+curMapRoute+' — '+fmtDate(d);
-  $('r-name').value=''; $('r-phone').value=''; $('r-notes').value='';
-  $('r-err').style.display='none';
-  $('reserve-modal').classList.add('open');
-}
-
-async function confirmReserve(){
-  const name=$('r-name').value.trim(), phone=$('r-phone').value.trim(), notes=$('r-notes').value.trim();
-  if(!name){ $('r-err').textContent='Please enter a name.'; $('r-err').style.display='block'; return; }
-  $('r-err').style.display='none';
-  closeReserveModal();
   const prev=bookings, base=String(Date.now()).slice(-5);
-  pendingReserve.seats.forEach((s,i)=>{
+  seats.forEach((s,i)=>{
     bookings.push({
-      id:'ADM'+base+(i?'-'+i:''), name, phone:phone||'—', email:'',
-      route:pendingReserve.route, date:pendingReserve.date,
+      id:'ADM'+base+(i?'-'+i:''), name:'Reserved', phone:'—', email:'',
+      route:curMapRoute, date:d,
       seats:[s], seatVer:2, status:'AdminReserved', isAdminBlock:true,
-      notes:notes||'Reserved by admin', created:new Date().toISOString().split('T')[0]
+      notes:'Reserved by admin', created:new Date().toISOString().split('T')[0]
     });
   });
-  const n=pendingReserve.seats.length;
-  try{ await saveData(); selSeats.clear(); updatePop(); renderSeatMap(); refreshAll(); showToast(n+' seat(s) reserved for '+name+'!'); }
+  try{ await saveData(); selSeats.clear(); updatePop(); renderSeatMap(); refreshAll(); showToast(seats.length+' seat(s) reserved!'); }
   catch(e){ bookings=prev; showToast((e&&e.hint)?('Error: '+e.message):'Error saving — try again'); }
 }
 
