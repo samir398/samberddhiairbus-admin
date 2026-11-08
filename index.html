@@ -87,10 +87,12 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .aseat.a-booked{background:rgba(255,80,80,0.1);color:rgba(255,120,120,0.5);cursor:not-allowed;border-color:rgba(255,80,80,0.18);}
 .aseat.a-admin{background:rgba(200,100,0,0.2);color:#f0a030;border-color:rgba(200,130,0,0.4);cursor:pointer;}
 .aseat.a-admin:hover{background:rgba(200,100,0,0.35);}
+.aseat.a-sel{background:rgba(90,169,255,.25)!important;color:#5aa9ff!important;border-color:#5aa9ff!important;}
 .mode-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;border-radius:8px;font-size:12px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.5px;}
 .mode-btn{padding:6px 14px;border-radius:6px;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;}
 .mode-btn.active-reserve{background:#f0a030;color:#000;}
 .mode-btn.active-free{background:#22913f;color:#fff;}
+.mode-btn.active-book{background:#2d8cff;color:#fff;}
 .mode-btn.inactive{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);}
 .a-sl-row{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:2px solid rgba(45,189,85,0.2);}
 .a-sl-row .aseat{flex:1;height:44px;flex-direction:column;gap:2px;display:flex;}
@@ -106,6 +108,9 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .sml-dot{width:12px;height:12px;border-radius:3px;}
 .inst-banner{background:rgba(200,100,0,0.1);border:1px solid rgba(200,130,0,0.25);border-radius:8px;padding:10px 14px;font-size:12px;color:rgba(255,200,100,0.8);margin-bottom:14px;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;display:none;}
 .inst-banner.show{display:block;}
+.book-bar{display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(45,140,255,.1);border:1px solid rgba(90,169,255,.35);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;}
+.book-bar .m-btn{flex:none;padding:8px 16px;min-width:0;}
+.book-bar .m-btn:disabled{opacity:.35;cursor:not-allowed;}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:none;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:#0d1f12;border:1px solid rgba(45,189,85,0.3);border-radius:14px;padding:24px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;}
@@ -128,6 +133,24 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .fg input:focus,.fg select:focus{border-color:#4dd97a;}
 .fg input::placeholder{color:rgba(255,255,255,0.22);}
 .fg select option{background:#0d1f12;}
+.bk-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
+.bk-sum{background:rgba(0,0,0,.35);border:1px solid rgba(45,189,85,.25);border-radius:8px;padding:10px 12px;font-size:13px;margin:4px 0 10px;}
+.bk-sec{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#4dd97a;margin:8px 0 6px;}
+.tk{background:#fff;color:#111;border-radius:12px;overflow:hidden;font-size:13px;}
+.tk-h{background:#22913f;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+.tk-b{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;line-height:1;}
+.tk-s{font-size:10px;letter-spacing:2px;opacity:.85;margin-top:3px;}
+.tk-ref{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;}
+.tk-route{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;text-align:center;padding:14px 10px 6px;color:#146b2b;}
+.tk-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 16px 12px;}
+.tk-g label{display:block;font-size:9px;color:#6b7b70;letter-spacing:1px;text-transform:uppercase;}
+.tk-seats{border-top:2px dashed #cfd8d2;padding:10px 16px;}
+.tk-seat{display:flex;justify-content:space-between;padding:3px 0;}
+.tk-seat b{color:#146b2b;}
+.tk-p{background:#f3f8f4;padding:10px 16px;}
+.tk-p div{display:flex;justify-content:space-between;padding:2px 0;}
+.tk-p .tot{font-weight:700;font-size:15px;border-top:1px solid #cfd8d2;margin-top:4px;padding-top:6px;}
+.tk-f{text-align:center;font-size:11px;color:#6b7b70;padding:8px;}
 .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
 .rev-card{background:#0d1f12;border:1px solid rgba(45,189,85,0.18);border-radius:12px;padding:18px;}
 .rev-lbl{font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:6px;}
@@ -228,6 +251,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
   .rtabs{width:100%;}
   .rt{flex:1 1 auto;text-align:center;}
 }
+@media (max-width: 560px){.bk-grid{grid-template-columns:1fr;}}
 @media (max-width: 420px){
   .stat-grid{grid-template-columns:1fr 1fr;}
   .rev-grid{grid-template-columns:1fr;}
@@ -285,7 +309,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="nav-sec">System</div>
     <div class="nav-item" onclick="nav('settings',this)"><span class="ni">⚙️</span> Settings</div>
   </div>
-  <div class="sb-foot">Sambriddhi Air Bus v2.1<br>Admin: Samir Ghimire
+  <div class="sb-foot">Sambriddhi Air Bus v2.2<br>Admin: Samir Ghimire
     <button class="tb-btn danger" style="margin-top:8px;width:100%;" onclick="logout()">Logout</button>
   </div>
 </div>
@@ -352,14 +376,19 @@ tr:hover td{background:rgba(45,189,85,0.04);}
             <input type="date" id="map-date" style="background:rgba(0,0,0,0.4);border:1px solid rgba(45,189,85,0.25);border-radius:6px;padding:5px 10px;font-size:12px;color:#fff;outline:none;font-family:Nunito,sans-serif;width:auto;" onchange="renderSeatMap()">
           </div>
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
-          <span style="font-size:11px;font-family:Rajdhani,sans-serif;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);">Click mode:</span>
-          <button id="mode-btn-reserve" class="mode-btn active-reserve" onclick="setClickMode('reserve')">🔒 Reserve Seat</button>
-          <button id="mode-btn-free" class="mode-btn inactive" onclick="setClickMode('free')">✓ Free Seat</button>
-          <button id="mode-btn-view" class="mode-btn inactive" onclick="setClickMode('view')">👁 View Info</button>
+        <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:11px;font-family:Rajdhani,sans-serif;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);">Mode:</span>
+          <button id="mb-release" class="mode-btn inactive" onclick="setClickMode('release')">✓ Release</button>
+          <button id="mb-reserve" class="mode-btn active-reserve" onclick="setClickMode('reserve')">🔒 Reserve</button>
+          <button id="mb-book" class="mode-btn inactive" onclick="setClickMode('book')">🎟 Book</button>
         </div>
-        <div class="inst-banner show" id="inst-banner">
-          🔒 Reserve mode: Click any free seat to reserve it for a customer (blocks it immediately on the booking site).
+        <div class="inst-banner show" id="inst-banner">🔒 Reserve: tap a free seat to hold it for a customer.</div>
+        <div class="book-bar" id="book-bar">
+          <div id="bb-text"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="m-btn m-btn-x" onclick="bkClear()">Clear</button>
+            <button class="m-btn m-btn-b" id="bb-go" onclick="bkOpen()">Continue →</button>
+          </div>
         </div>
         <div class="sm-body">
           <div>
@@ -373,20 +402,21 @@ tr:hover td{background:rgba(45,189,85,0.04);}
               <div class="sml"><div class="sml-dot" style="background:rgba(0,0,0,0.3);border:1px solid rgba(45,189,85,0.28);"></div>Free</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(45,189,85,0.2);border:1px solid rgba(77,217,122,0.45);"></div>Confirmed</div>
               <div class="sml"><div class="sml-dot" style="background:rgba(240,185,123,0.14);border:1px solid rgba(240,185,123,0.35);"></div>Pending</div>
-              <div class="sml"><div class="sml-dot" style="background:rgba(200,100,0,0.2);border:1px solid rgba(200,130,0,0.4);"></div>Admin Reserved</div>
+              <div class="sml"><div class="sml-dot" style="background:rgba(200,100,0,0.2);border:1px solid rgba(200,130,0,0.4);"></div>Reserved</div>
+              <div class="sml"><div class="sml-dot" style="background:rgba(90,169,255,0.25);border:1px solid #5aa9ff;"></div>Selected</div>
             </div>
           </div>
           <div class="sm-right">
             <div class="info-card" id="seat-info-card">
               <div class="ic-title">Seat Info</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.28);font-style:italic;">Click a seat to see details</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.28);font-style:italic;">Tap a booked seat to see details</div>
             </div>
             <div class="info-card">
               <div class="ic-title">Summary</div>
               <div class="ic-row"><span>Total Seats</span><span id="sm-total">37</span></div>
               <div class="ic-row"><span>Confirmed</span><span id="sm-conf" style="color:#4dd97a;">0</span></div>
               <div class="ic-row"><span>Pending</span><span id="sm-pend" style="color:#f0b97b;">0</span></div>
-              <div class="ic-row"><span>Admin Reserved</span><span id="sm-admin" style="color:#f0a030;">0</span></div>
+              <div class="ic-row"><span>Reserved</span><span id="sm-admin" style="color:#f0a030;">0</span></div>
               <div class="ic-row"><span>Available</span><span id="sm-avail">37</span></div>
             </div>
           </div>
@@ -561,6 +591,9 @@ tr:hover td{background:rgba(45,189,85,0.04);}
   </div>
 </div>
 
+<div class="modal-bg" id="book-modal"><div class="modal" style="width:520px" id="bk-box"></div></div>
+<div class="modal-bg" id="tk-modal"><div class="modal" style="width:440px" id="tk-box"></div></div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -612,6 +645,9 @@ const FIXED_BIN_ID = '69e5c3f436566621a8d01951';
 // ╚══════════════════════════════════════════════════════════════╝
 const NOTO_DEVANAGARI_FONT = "";
 
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
 let PRICE            = parseInt(localStorage.getItem(PRICE_KEY), 10) || 2500;
 let bookings          = [];
 let coupons           = [];
@@ -620,6 +656,9 @@ let curFilter        = 'all';
 let curMapRoute      = 'Dharan → Pokhara';
 let clickMode        = 'reserve';
 let pendingReserve   = null;
+let selSeats         = new Set();   // seats selected in Book mode
+let selKey           = '';          // route|date the selection belongs to
+let bkCoupon         = null;        // coupon applied in the booking form
 
 let NOTIFY = { email: 'samirtsg9@gmail.com', whatsapp: '9779763255296', staffWhatsapp: '' };
 (function loadNotifyConfig(){
@@ -728,7 +767,7 @@ function nav(page,el){
   document.getElementById('v-'+page).classList.add('active');
   if(el) el.classList.add('active');
   const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',coupons:'Coupons',settings:'Settings'};
-  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Click seats to reserve or free them',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
+  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Release, reserve or book seats',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
   document.getElementById('topbar-title').innerHTML=titles[page]+' <span>'+subs[page]+'</span>';
   document.getElementById('search-bar').style.display=page==='bookings'?'block':'none';
   if(page==='dashboard') renderDashboard();
@@ -815,6 +854,7 @@ function renderBookings(filter,search){
         <button class="act-btn" onclick="openDetail('${b.id}')">View</button>
         ${b.status!=='Confirmed'&&b.status!=='AdminReserved'?`<button class="act-btn" onclick="changeStatus('${b.id}','Confirmed')">✓</button>`:''}
         ${b.status!=='Cancelled'?`<button class="act-btn red" onclick="changeStatus('${b.id}','Cancelled')">✕</button>`:''}
+        ${b.status!=='Cancelled'&&b.status!=='AdminReserved'?`<button class="act-btn" title="Show ticket" onclick="showTicket('${b.id}')">🎫</button>`:''}
         <button class="act-btn" title="Email this booking" onclick="notifyEmail('${b.id}')">📧</button>
         <button class="act-btn" title="WhatsApp this booking" onclick="notifyWhatsapp('${b.id}')">💬</button>
         <button class="act-btn" title="Send full ticket detail to staff number" onclick="notifyStaff('${b.id}')">📱</button>
@@ -826,16 +866,32 @@ function searchBkgs(){ renderBookings(curFilter,document.getElementById('search-
 
 function switchMapRoute(r,el){ curMapRoute=r; document.querySelectorAll('.rt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); renderSeatMap(); }
 
+// ═══ SEAT MAP MODES: Release / Reserve / Book ═══
 function setClickMode(mode){
   clickMode=mode;
-  document.getElementById('mode-btn-reserve').className='mode-btn '+(mode==='reserve'?'active-reserve':'inactive');
-  document.getElementById('mode-btn-free').className='mode-btn '+(mode==='free'?'active-free':'inactive');
-  document.getElementById('mode-btn-view').className='mode-btn '+(mode==='view'?'active-free':'inactive');
-  const banner=document.getElementById('inst-banner');
-  if(mode==='reserve'){ banner.className='inst-banner show'; banner.removeAttribute('style'); banner.textContent='🔒 Reserve mode: Click any free seat to instantly reserve it.'; }
-  else if(mode==='free'){ banner.className='inst-banner show'; banner.style.background='rgba(45,189,85,0.08)'; banner.style.borderColor='rgba(45,189,85,0.25)'; banner.style.color='rgba(150,255,180,0.75)'; banner.textContent='✓ Free mode: Click any Admin Reserved seat to release it.'; }
-  else{ banner.className='inst-banner'; }
+  const cls={release:'active-free',reserve:'active-reserve',book:'active-book'};
+  ['release','reserve','book'].forEach(k=>$('mb-'+k).className='mode-btn '+(k===mode?cls[k]:'inactive'));
+  const msg={
+    release:'✓ Release: tap a Reserved (orange) seat to free it.',
+    reserve:'🔒 Reserve: tap a free seat to hold it for a customer.',
+    book:'🎟 Book: tap one or more seats, then press Continue to fill the form and make the ticket.'};
+  const b=$('inst-banner');
+  b.className='inst-banner show'; b.removeAttribute('style'); b.textContent=msg[mode];
+  if(mode==='release'){ b.style.background='rgba(45,189,85,0.08)'; b.style.borderColor='rgba(45,189,85,0.25)'; b.style.color='rgba(150,255,180,0.75)'; }
+  if(mode==='book'){ b.style.background='rgba(45,140,255,0.1)'; b.style.borderColor='rgba(90,169,255,0.3)'; b.style.color='#9cc8ff'; }
+  if(mode!=='book') selSeats.clear();
+  updateBookBar();
+  renderSeatMap();
 }
+function updateBookBar(){
+  const bar=$('book-bar');
+  if(clickMode!=='book'){ bar.style.display='none'; return; }
+  const a=sortSeats([...selSeats]);
+  bar.style.display='flex';
+  $('bb-text').innerHTML=a.length?`<b>${a.join(', ')}</b> · ${a.length} seat(s) · Rs. ${(a.length*PRICE).toLocaleString()}`:'Tap free seats on the map to select them';
+  $('bb-go').disabled=!a.length;
+}
+function bkClear(){ selSeats.clear(); updateBookBar(); renderSeatMap(); }
 
 function getSeatStates(routeStr,date){
   const conf=new Set(),pend=new Set(),adminRes=new Set();
@@ -854,6 +910,9 @@ function getSeatStates(routeStr,date){
 
 function renderSeatMap(){
   const mapDate=document.getElementById('map-date').value;
+  // selection belongs to one route+date: reset when either changes
+  const key=curMapRoute+'|'+mapDate;
+  if(key!==selKey){ selKey=key; selSeats.clear(); updateBookBar(); }
   const{conf,pend,adminRes}=getSeatStates(curMapRoute,mapDate);
   const grid=document.getElementById('a-grid'); grid.innerHTML='';
   const lCol=document.createElement('div'); lCol.className='a-lcol';
@@ -873,7 +932,7 @@ function renderSeatMap(){
   SLEEPERS.forEach((id,i)=>{
     const isCon=conf.has(id),isPend=pend.has(id),isAdmin=adminRes.has(id);
     const el=document.createElement('div');
-    el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'');
+    el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'')+(selSeats.has(id)?' a-sel':'');
     el.style.cssText='flex:1;height:44px;flex-direction:column;gap:2px;display:flex;align-items:center;justify-content:center;'+(i===2?'margin-left:10px;':'');
     el.innerHTML=`<span style="font-size:13px">🛏</span><span style="font-size:10px">${id}</span>`;
     el.onclick=()=>handleSeatClick(id,isCon,isPend,isAdmin,mapDate);
@@ -892,7 +951,7 @@ function mkAdminSeat(id,conf,pend,adminRes,mapDate){
   const el=document.createElement('div');
   const sid=String(id);
   const isCon=conf.has(sid),isPend=pend.has(sid),isAdmin=adminRes.has(sid);
-  el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'');
+  el.className='aseat'+(isCon?' a-conf':isPend?' a-pend':isAdmin?' a-admin':'')+(selSeats.has(sid)?' a-sel':'');
   if(sid.length>3) el.style.fontSize='8.5px';
   el.textContent=id;
   el.onclick=()=>handleSeatClick(sid,isCon,isPend,isAdmin,mapDate);
@@ -901,9 +960,14 @@ function mkAdminSeat(id,conf,pend,adminRes,mapDate){
 
 function handleSeatClick(sid,isCon,isPend,isAdmin,mapDate){
   const mapDateVal=document.getElementById('map-date').value;
-  if(clickMode==='view'||isCon||isPend){ showSeatInfo(sid); return; }
+  // taken seats always show their info
+  if(isCon||isPend){ showSeatInfo(sid); return; }
+  if(clickMode==='book'){
+    selSeats.has(sid)?selSeats.delete(sid):selSeats.add(sid);
+    updateBookBar(); renderSeatMap(); return;
+  }
   if(clickMode==='reserve'){
-    if(isAdmin){ showToast('Seat '+sid+' is already reserved. Switch to Free mode to release it.'); return; }
+    if(isAdmin){ showToast('Seat '+sid+' is already reserved. Use Release to free it.'); return; }
     pendingReserve={seatId:sid,date:mapDateVal,route:curMapRoute};
     document.getElementById('reserve-title').textContent='Reserve Seat '+sid+' — '+curMapRoute+' — '+fmtDate(mapDateVal);
     document.getElementById('r-name').value=''; document.getElementById('r-phone').value=''; document.getElementById('r-notes').value='';
@@ -911,8 +975,8 @@ function handleSeatClick(sid,isCon,isPend,isAdmin,mapDate){
     document.getElementById('reserve-modal').classList.add('open');
     return;
   }
-  if(clickMode==='free'){
-    if(!isAdmin){ showToast('Seat '+sid+' is not admin reserved. Nothing to free.'); return; }
+  if(clickMode==='release'){
+    if(!isAdmin){ showToast('Seat '+sid+' is not reserved. Nothing to release.'); return; }
     freeSeat(sid,mapDateVal);
   }
 }
@@ -951,9 +1015,9 @@ function showSeatInfo(sid){
   const mapDate=document.getElementById('map-date').value;
   const bkg=bookings.find(b=>b.route===curMapRoute&&b.date===mapDate&&b.status!=='Cancelled'&&b.seats.map(String).includes(sid));
   const card=document.getElementById('seat-info-card');
-  if(!bkg){ card.innerHTML=`<div class="ic-title">Seat ${sid}</div><div style="font-size:12px;color:#4dd97a;">✓ Available — click to reserve</div>`; return; }
+  if(!bkg){ card.innerHTML=`<div class="ic-title">Seat ${sid}</div><div style="font-size:12px;color:#4dd97a;">✓ Available</div>`; return; }
   const isAdmin=bkg.status==='AdminReserved';
-  card.innerHTML=`<div class="ic-title">Seat ${sid} — ${isAdmin?'Admin Reserved':bkg.status}</div>
+  card.innerHTML=`<div class="ic-title">Seat ${sid} — ${isAdmin?'Reserved':bkg.status}</div>
     <div class="ic-row"><span>Name</span><span>${bkg.name}</span></div>
     <div class="ic-row"><span>Phone</span><span>${bkg.phone||'—'}</span></div>
     <div class="ic-row"><span>Date</span><span>${fmtDate(bkg.date)}</span></div>
@@ -963,12 +1027,173 @@ function showSeatInfo(sid){
     ${bkg.notes?`<div class="ic-row"><span>Notes</span><span>${bkg.notes}</span></div>`:''}
     <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
       <button class="act-btn" onclick="openDetail('${bkg.id}')">Full Detail</button>
+      ${isAdmin?'':`<button class="act-btn" onclick="showTicket('${bkg.id}')">🎫 Ticket</button>`}
       <button class="act-btn" onclick="notifyEmail('${bkg.id}')">📧</button>
       <button class="act-btn" onclick="notifyWhatsapp('${bkg.id}')">💬</button>
       <button class="act-btn" onclick="notifyStaff('${bkg.id}')">📱 Staff</button>
       ${isAdmin?`<button class="act-btn red" onclick="freeSeat('${sid}','${document.getElementById('map-date').value}')">Release Seat</button>`:''}
     </div>`;
 }
+
+// ═══ BOOK FLOW: route → form → discount → ticket ═══
+function bkCalc(){
+  const n=selSeats.size;
+  const ex=Math.max(0,parseInt($('bk-extra').value,10)||0);
+  const per=Math.max(0,(bkCoupon?couponPrice(bkCoupon):PRICE)-ex);
+  $('bk-sum').innerHTML=
+    `<div style="display:flex;justify-content:space-between;"><span>${n} seat(s) × Rs. ${per.toLocaleString()}</span><b style="color:#4dd97a;">Rs. ${(n*per).toLocaleString()}</b></div>`+
+    (per<PRICE?`<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;">Saving Rs. ${(n*(PRICE-per)).toLocaleString()} vs full price (Rs. ${(n*PRICE).toLocaleString()})</div>`:'');
+  return {per,ex};
+}
+function bkOpen(){
+  if(!selSeats.size) return;
+  bkCoupon=null;
+  const seats=sortSeats([...selSeats]);
+  const routes=['Dharan → Pokhara','Pokhara → Dharan','Itahari → Pokhara'];
+  $('bk-box').innerHTML=`
+    <div class="modal-title">🎟 Book ${seats.length} seat(s): ${seats.join(', ')}</div>
+    <div class="bk-sec">1 · Trip</div>
+    <div class="bk-grid">
+      <div class="fg"><label>Route</label><select id="bk-route">${routes.map(r=>`<option ${r===curMapRoute?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div class="fg"><label>Travel date</label><input type="date" id="bk-date" value="${$('map-date').value}"></div>
+    </div>
+    <div class="bk-sec">2 · Customer</div>
+    <div class="bk-grid">
+      <div class="fg"><label>Full name</label><input type="text" id="bk-name" placeholder="Passenger name"></div>
+      <div class="fg"><label>Phone</label><input type="tel" id="bk-phone" placeholder="98XXXXXXXX"></div>
+      <div class="fg" style="grid-column:1/-1"><label>Email (optional)</label><input type="email" id="bk-email" placeholder="email@example.com"></div>
+    </div>
+    <div class="bk-sec">3 · Passengers (optional, one per seat)</div>
+    ${seats.map((s,i)=>`<div class="fg" style="margin-bottom:8px"><label>Seat ${s}</label><input type="text" id="bk-p-${i}" placeholder="Same as customer"></div>`).join('')}
+    <div class="bk-sec">4 · Discount</div>
+    <div class="bk-grid">
+      <div class="fg"><label>Coupon code</label>
+        <div style="display:flex;gap:6px;"><input type="text" id="bk-coupon" placeholder="CODE" style="flex:1;min-width:0;text-transform:uppercase;"><button class="act-btn" style="margin:0" onclick="bkApply()">Apply</button></div>
+        <div id="bk-cmsg" style="font-size:11px;min-height:14px;"></div></div>
+      <div class="fg"><label>Extra discount (Rs. per seat)</label><input type="number" id="bk-extra" min="0" placeholder="0" oninput="bkCalc()"></div>
+    </div>
+    <div class="bk-grid">
+      <div class="fg"><label>Payment status</label><select id="bk-status"><option>Confirmed</option><option>Pending</option></select></div>
+      <div class="fg"><label>Notes</label><input type="text" id="bk-notes" placeholder="Optional"></div>
+    </div>
+    <div class="bk-sum" id="bk-sum"></div>
+    <div id="bk-err" style="color:#f0997b;font-size:12px;display:none;font-family:Rajdhani,sans-serif;font-weight:600;"></div>
+    <div class="modal-btns">
+      <button class="m-btn m-btn-g" onclick="bkSave()">🎫 Save &amp; Make Ticket</button>
+      <button class="m-btn m-btn-x" onclick="bkClose()">Back</button>
+    </div>`;
+  bkCalc();
+  $('book-modal').classList.add('open');
+}
+function bkClose(){ $('book-modal').classList.remove('open'); }
+function bkApply(){
+  const code=$('bk-coupon').value.trim().toUpperCase(), m=$('bk-cmsg');
+  bkCoupon=null;
+  if(!code){ m.textContent=''; bkCalc(); return; }
+  const c=coupons.find(x=>x.code===code);
+  if(!c){ m.style.color='#f0997b'; m.textContent='Invalid coupon code'; }
+  else if(!couponIsUsable(c)){ m.style.color='#f0997b'; m.textContent='Coupon is disabled, expired or fully used'; }
+  else{ bkCoupon=c; m.style.color='#4dd97a'; m.textContent='✓ Applied: Rs. '+couponPrice(c).toLocaleString()+' / seat'; }
+  bkCalc();
+}
+async function bkSave(){
+  const err=$('bk-err'), show=t=>{ err.textContent=t; err.style.display='block'; };
+  const name=$('bk-name').value.trim(), phone=$('bk-phone').value.trim();
+  const route=$('bk-route').value, date=$('bk-date').value;
+  if(!name||!phone||!date) return show('Please fill Name, Phone and Travel date.');
+  const seats=sortSeats([...selSeats]);
+  const clash=bookings.some(b=>b.route===route&&b.date===date&&b.status!=='Cancelled'&&b.status!=='AdminReserved'&&b.seats.some(s=>seats.includes(String(s))));
+  if(clash) return show('One of these seats is already booked on that route and date.');
+  const {per,ex}=bkCalc();
+  if(per<=0) return show('Final price must be above zero.');
+  const passengers={};
+  seats.forEach((s,i)=>{ const v=$('bk-p-'+i).value.trim(); if(v) passengers[s]=v; });
+  const bk={id:'BK'+String(Date.now()).slice(-5),name,phone,email:$('bk-email').value.trim(),route,date,seats,seatVer:2,
+    status:$('bk-status').value,notes:$('bk-notes').value.trim(),isAdminBlock:false,created:new Date().toISOString().split('T')[0],passengers};
+  if(per!==PRICE) bk.pricePerSeat=per;
+  if(bkCoupon) bk.coupon=bkCoupon.code;
+  if(ex) bk.extraDiscount=ex;
+  const prev=bookings;
+  // booking over a reserved seat converts that reservation into the real booking
+  bookings=bookings.filter(b=>!(b.status==='AdminReserved'&&b.route===route&&b.date===date&&b.seats.some(s=>seats.includes(String(s)))));
+  bookings.push(bk);
+  try{
+    await saveData();
+    bkClose(); selSeats.clear(); updateBookBar(); renderSeatMap(); refreshAll();
+    showToast('Booking '+bk.id+' saved!');
+    showTicket(bk.id);
+  }catch(e){
+    bookings=prev;
+    show((e&&e.hint)?('Error: '+e.message):'Could not save, try again.');
+  }
+}
+
+// ═══ TICKET ═══
+function ticketHTML(b){
+  const total=bookingTotal(b), base=b.seats.length*PRICE;
+  const st=b.status==='Confirmed'?'CONFIRMED':'PENDING PAYMENT';
+  return `<div class="tk">
+    <div class="tk-h"><div><div class="tk-b">Sambriddhi Air Bus</div><div class="tk-s">E-TICKET</div></div><div class="tk-ref">${esc(b.id)}</div></div>
+    <div class="tk-route">${esc(b.route)}</div>
+    <div class="tk-g">
+      <div><label>Date</label>${fmtDate(b.date)}</div><div><label>Status</label><b>${st}</b></div>
+      <div><label>Customer</label>${esc(b.name)}</div><div><label>Phone</label>${esc(b.phone||'-')}</div>
+    </div>
+    <div class="tk-seats">${sortSeats(b.seats).map(s=>`<div class="tk-seat"><b>Seat ${esc(s)}</b><span>${esc((b.passengers&&b.passengers[s])||b.name)}</span></div>`).join('')}</div>
+    <div class="tk-p">
+      <div><span>Fare per seat</span><span>Rs. ${PRICE.toLocaleString()}</span></div>
+      ${base>total?`<div><span>Discount${b.coupon?' ('+esc(b.coupon)+')':''}</span><span>- Rs. ${(base-total).toLocaleString()}</span></div>`:''}
+      <div class="tot"><span>Total (${b.seats.length} seat${b.seats.length>1?'s':''})</span><span>Rs. ${total.toLocaleString()}</span></div>
+    </div>
+    <div class="tk-f">Please show this ticket at boarding</div></div>`;
+}
+function showTicket(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  $('tk-box').innerHTML=ticketHTML(b)+`<div class="modal-btns">
+    <button class="m-btn m-btn-g" onclick="ticketPDF('${b.id}')">⬇ PDF</button>
+    <button class="m-btn m-btn-w" onclick="ticketWA('${b.id}')">💬 Send</button>
+    <button class="m-btn m-btn-x" onclick="closeTicket()">Close</button></div>`;
+  $('tk-modal').classList.add('open');
+}
+function closeTicket(){ $('tk-modal').classList.remove('open'); }
+function ticketWA(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  let n=(b.phone||'').replace(/[^0-9]/g,'').replace(/^0+/,'');
+  if(n.length===10) n='977'+n;
+  if(!n){ showToast('This booking has no phone number'); return; }
+  window.open('https://wa.me/'+n+'?text='+encodeURIComponent('Your ticket is ready 🎫\n\n'+bookingSummaryText(b)),'_blank');
+}
+function ticketPDF(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  if(!window.jspdf){ showToast('PDF library failed to load'); return; }
+  const S=s=>pdfSafe(s,false), W=148;
+  const d=new window.jspdf.jsPDF({unit:'mm',format:'a5'});
+  d.setFillColor(34,145,63); d.rect(0,0,W,28,'F');
+  d.setTextColor(255); d.setFont('helvetica','bold'); d.setFontSize(18); d.text('Sambriddhi Air Bus',10,13);
+  d.setFont('helvetica','normal'); d.setFontSize(9);
+  d.text('E-TICKET   |   Ref '+b.id,10,21);
+  d.text(b.status==='Confirmed'?'CONFIRMED':'PENDING PAYMENT',W-10,21,{align:'right'});
+  d.setTextColor(20,107,43); d.setFont('helvetica','bold'); d.setFontSize(17);
+  d.text(S(b.route),W/2,42,{align:'center'});
+  let y=54;
+  const row=(l,v)=>{ d.setFont('helvetica','normal'); d.setFontSize(8); d.setTextColor(120); d.text(l.toUpperCase(),10,y); d.setFontSize(12); d.setTextColor(0); d.text(S(v),10,y+6); y+=14; };
+  row('Travel date',fmtDate(b.date)); row('Customer',b.name); row('Phone',b.phone||'-');
+  d.autoTable({startY:y,head:[['Seat','Passenger']],
+    body:sortSeats(b.seats).map(s=>[s,S((b.passengers&&b.passengers[s])||b.name)]),
+    styles:{fontSize:10},headStyles:{fillColor:[34,145,63],textColor:255},margin:{left:10,right:10}});
+  y=d.lastAutoTable.finalY+10;
+  const total=bookingTotal(b), base=b.seats.length*PRICE;
+  d.setFontSize(10); d.setFont('helvetica','normal'); d.setTextColor(60);
+  d.text('Fare per seat: Rs. '+PRICE.toLocaleString(),10,y); y+=6;
+  if(base>total){ d.text('Discount'+(b.coupon?' ('+S(b.coupon)+')':'')+': - Rs. '+(base-total).toLocaleString(),10,y); y+=6; }
+  d.setFont('helvetica','bold'); d.setFontSize(13); d.setTextColor(0);
+  d.text('Total: Rs. '+total.toLocaleString(),10,y+3);
+  d.setFont('helvetica','normal'); d.setFontSize(8); d.setTextColor(120);
+  d.text('Please show this ticket at boarding.',W/2,200,{align:'center'});
+  d.save('ticket_'+b.id+'.pdf');
+  showToast('Ticket PDF downloaded!');
+}
+['book-modal','tk-modal'].forEach(i=>$(i).addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); }));
 
 function renderRevenue(){
   const conf=bookings.filter(b=>b.status==='Confirmed');
@@ -1115,7 +1340,7 @@ function renderReportPreview(){
   document.getElementById('rep-summary').textContent=date?`${data.length} bookings · ${seats} seats · Rs. ${rev.toLocaleString()} confirmed revenue`:'';
 }
 
-// ═══ PDF EXPORT (new version) ═══
+// ═══ PDF EXPORT ═══
 // Makes text safe for PDF fonts (→ and — are not in the fonts)
 function pdfSafe(s, allowUnicode){
   let t = String(s == null ? '' : s).replace(/→/g,'to').replace(/[—–]/g,'-');
@@ -1252,6 +1477,7 @@ function openDetail(id){
   `;
   const btns=document.getElementById('modal-btns'); btns.innerHTML='';
   const mk=(cls,txt,fn)=>{const bn=document.createElement('button');bn.className='m-btn '+cls;bn.textContent=txt;bn.onclick=fn;btns.appendChild(bn);};
+  if(b.status!=='Cancelled'&&b.status!=='AdminReserved') mk('m-btn-g','🎫 Ticket',()=>{closeDetail();showTicket(id);});
   if(b.status==='Pending'||b.status==='AdminReserved') mk('m-btn-g','Confirm',()=>{changeStatus(id,'Confirmed');closeDetail();});
   if(b.status!=='Cancelled') mk('m-btn-r','Cancel',()=>{changeStatus(id,'Cancelled');closeDetail();});
   mk('m-btn-b','📧 Email',()=>notifyEmail(id));
