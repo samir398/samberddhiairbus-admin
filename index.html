@@ -228,6 +228,17 @@ tr:hover td{background:rgba(45,189,85,0.04);}
 .lg-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2.8s ease-in-out infinite 1.5s;}
 @keyframes shimmer{to{left:160%}}
 
+/* ═══ BUS LOCK SYSTEM ═══ */
+.lock-bar{border-radius:10px;padding:10px 14px;margin-bottom:14px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;font-size:13px;background:rgba(0,0,0,.3);border:1px solid rgba(45,189,85,.2);}
+.lock-bar.on{background:rgba(240,153,123,.12);border-color:rgba(240,153,123,.4);color:#f0997b;}
+.lock-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.lock-row input{flex:1;min-width:160px;background:rgba(0,0,0,.4);border:1px solid rgba(45,189,85,.25);border-radius:7px;padding:7px 10px;font-size:13px;color:#fff;outline:none;font-family:'Nunito',sans-serif;}
+.lock-row .m-btn{flex:none;padding:8px 14px;min-width:0;}
+.a-bus.locked .aseat{opacity:.35;cursor:not-allowed;}
+.a-bus.locked .aseat:hover{transform:none;border-color:rgba(45,189,85,.28);}
+.lk-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(45,189,85,.07);font-size:12px;}
+.lk-item:last-child{border-bottom:none;}
+
 @media (max-width: 860px){
   .sidebar{transform:translateX(-100%);box-shadow:20px 0 40px rgba(0,0,0,0.4);}
   .sidebar.open{transform:translateX(0);}
@@ -315,7 +326,7 @@ tr:hover td{background:rgba(45,189,85,0.04);}
     <div class="nav-sec">System</div>
     <div class="nav-item" onclick="nav('settings',this)"><span class="ni">⚙️</span> Settings</div>
   </div>
-  <div class="sb-foot">Sambriddhi Air Bus v2.2<br>Admin: Samir Ghimire
+  <div class="sb-foot">Sambriddhi Air Bus v2.3<br>Admin: Samir Ghimire
     <button class="tb-btn danger" style="margin-top:8px;width:100%;" onclick="logout()">Logout</button>
   </div>
 </div>
@@ -383,6 +394,21 @@ tr:hover td{background:rgba(45,189,85,0.04);}
           </div>
         </div>
         <div class="inst-banner show" id="inst-banner">👆 Tap one or more seats. A menu pops up at the bottom with Release, Reserve and Book.</div>
+        <div class="lock-bar" id="lock-bar">
+          <div id="lock-off">
+            <div class="lock-row">
+              <input type="text" id="lk-reason" placeholder="Reason (e.g. Bus under repair, strike, landslide)">
+              <button class="m-btn m-btn-r" onclick="lockBus(false)">🔒 Lock this route</button>
+              <button class="m-btn m-btn-r" onclick="lockBus(true)">🔒 Lock ALL routes</button>
+            </div>
+          </div>
+          <div id="lock-on" style="display:none;">
+            <div class="lock-row" style="justify-content:space-between;">
+              <span id="lock-msg"></span>
+              <button class="m-btn m-btn-g" id="lock-unbtn">🔓 Unlock</button>
+            </div>
+          </div>
+        </div>
         <div class="sm-body">
           <div>
             <div class="a-bus">
@@ -411,6 +437,10 @@ tr:hover td{background:rgba(45,189,85,0.04);}
               <div class="ic-row"><span>Pending</span><span id="sm-pend" style="color:#f0b97b;">0</span></div>
               <div class="ic-row"><span>Reserved</span><span id="sm-admin" style="color:#f0a030;">0</span></div>
               <div class="ic-row"><span>Available</span><span id="sm-avail">37</span></div>
+            </div>
+            <div class="info-card">
+              <div class="ic-title">Locked Days</div>
+              <div id="lock-list"></div>
             </div>
           </div>
         </div>
@@ -654,6 +684,7 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&l
 let PRICE            = parseInt(localStorage.getItem(PRICE_KEY), 10) || 2500;
 let bookings          = [];
 let coupons           = [];
+let locks             = [];
 let cachedBinId       = FIXED_BIN_ID || localStorage.getItem(BIN_ID_KEY) || null;
 let curFilter        = 'all';
 let curMapRoute      = 'Dharan → Pokhara';
@@ -740,7 +771,7 @@ function classifyNetworkError(e, res){
 async function getBinId(){
   if(FIXED_BIN_ID) return FIXED_BIN_ID;
   if(cachedBinId) return cachedBinId;
-  const res=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY,'X-Bin-Name':'sambriddhi-bookings','X-Bin-Private':'true'},body:JSON.stringify({bookings:[],coupons:[]})});
+  const res=await fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY,'X-Bin-Name':'sambriddhi-bookings','X-Bin-Private':'true'},body:JSON.stringify({bookings:[],coupons:[],locks:[]})});
   const d=await res.json(); cachedBinId=d.metadata.id; localStorage.setItem(BIN_ID_KEY,cachedBinId); return cachedBinId;
 }
 async function loadData(){
@@ -749,13 +780,13 @@ async function loadData(){
   try{ res=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':MASTER_KEY,'X-Access-Key':ACCESS_KEY}}); }
   catch(e){ throw classifyNetworkError(e,null); }
   if(!res.ok) throw classifyNetworkError(null,res);
-  const d=await res.json(); bookings=d.record.bookings||[]; coupons=d.record.coupons||[];
+  const d=await res.json(); bookings=d.record.bookings||[]; coupons=d.record.coupons||[]; locks=d.record.locks||[];
   migrateSeats(bookings);
 }
 async function saveData(){
   const id=await getBinId();
   let res;
-  try{ res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings,coupons})}); }
+  try{ res=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify({bookings,coupons,locks})}); }
   catch(e){ throw classifyNetworkError(e,null); }
   if(!res.ok) throw classifyNetworkError(null,res);
 }
@@ -772,7 +803,7 @@ function nav(page,el){
   updatePop();
   if(el) el.classList.add('active');
   const titles={dashboard:'Dashboard',bookings:'Bookings',seatmap:'Seat Map',revenue:'Revenue',report:'Daily Report',add:'Add Booking',coupons:'Coupons',settings:'Settings'};
-  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Release, reserve or book seats',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
+  const subs={dashboard:'Overview',bookings:'All bookings',seatmap:'Release, reserve, book or lock buses',revenue:'Financial summary',report:'Download a PDF of one day\'s customers',add:'New booking entry',coupons:'Create and manage discount codes',settings:'System settings'};
   document.getElementById('topbar-title').innerHTML=titles[page]+' <span>'+subs[page]+'</span>';
   document.getElementById('search-bar').style.display=page==='bookings'?'block':'none';
   if(page==='dashboard') renderDashboard();
@@ -883,6 +914,54 @@ function updatePop(){
 function updateBookBar(){ updatePop(); }
 function bkClear(){ selSeats.clear(); updatePop(); renderSeatMap(); }
 
+// ═══ BUS LOCKS ═══
+function getLock(route,date){
+  return locks.find(l=>l.date===date && (l.route===route || l.route==='ALL'));
+}
+function lockMsg(l){
+  return '🔒 Bus unavailable — '+(l.route==='ALL'?'ALL routes':l.route)+' on '+fmtDate(l.date)+(l.reason?(' · '+l.reason):'');
+}
+function renderLockBar(){
+  const date=$('map-date').value, lock=getLock(curMapRoute,date);
+  $('lock-bar').classList.toggle('on',!!lock);
+  $('lock-off').style.display=lock?'none':'block';
+  $('lock-on').style.display=lock?'block':'none';
+  if(lock){
+    $('lock-msg').textContent=lockMsg(lock);
+    $('lock-unbtn').onclick=()=>unlockBus(lock.id);
+  }
+  document.querySelector('.a-bus').classList.toggle('locked',!!lock);
+}
+function renderLockList(){
+  const today=new Date().toISOString().split('T')[0];
+  const list=[...locks].filter(l=>l.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  $('lock-list').innerHTML=list.length?list.map(l=>`
+    <div class="lk-item">
+      <div><b style="color:#f0997b;">${esc(fmtDate(l.date))}</b> · ${l.route==='ALL'?'All routes':esc(l.route)}${l.reason?`<div style="color:rgba(255,255,255,.35);font-size:11px;">${esc(l.reason)}</div>`:''}</div>
+      <button class="act-btn" onclick="unlockBus('${l.id}')">Unlock</button>
+    </div>`).join(''):'<div style="font-size:12px;color:rgba(255,255,255,0.28);font-style:italic;">No upcoming locked days</div>';
+}
+async function lockBus(all){
+  const route=all?'ALL':curMapRoute, date=$('map-date').value;
+  if(!date){ showToast('Pick a date first'); return; }
+  if(locks.some(l=>l.date===date&&l.route===route)) return;
+  const n=bookings.filter(b=>b.date===date&&b.status!=='Cancelled'&&(all||b.route===route)).length;
+  if(n && !confirm(n+' active booking(s)/reservation(s) already exist for this day. They will NOT be cancelled automatically — you must contact those customers. Lock anyway?')) return;
+  const prev=locks;
+  locks=[...locks,{id:'LK'+String(Date.now()).slice(-6),route,date,reason:$('lk-reason').value.trim(),created:new Date().toISOString().split('T')[0]}];
+  try{
+    await saveData();
+    $('lk-reason').value=''; selSeats.clear(); updatePop(); renderSeatMap();
+    showToast('🔒 '+(all?'All routes':route)+' locked for '+fmtDate(date));
+  }catch(e){ locks=prev; showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
+}
+async function unlockBus(id){
+  const prev=locks;
+  locks=locks.filter(l=>l.id!==id);
+  try{ await saveData(); renderSeatMap(); showToast('🔓 Unlocked'); }
+  catch(e){ locks=prev; showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
+}
+
 function getSeatStates(routeStr,date){
   const conf=new Set(),pend=new Set(),adminRes=new Set();
   bookings.forEach(b=>{
@@ -903,6 +982,7 @@ function renderSeatMap(){
   // selection belongs to one route+date: reset when either changes
   const key=curMapRoute+'|'+mapDate;
   if(key!==selKey){ selKey=key; selSeats.clear(); updateBookBar(); }
+  if(getLock(curMapRoute,mapDate) && selSeats.size){ selSeats.clear(); updatePop(); }
   const{conf,pend,adminRes}=getSeatStates(curMapRoute,mapDate);
   const grid=document.getElementById('a-grid'); grid.innerHTML='';
   const lCol=document.createElement('div'); lCol.className='a-lcol';
@@ -935,6 +1015,7 @@ function renderSeatMap(){
   document.getElementById('sm-pend').textContent=pend.size;
   document.getElementById('sm-admin').textContent=adminRes.size;
   document.getElementById('sm-avail').textContent=TOTAL_SEATS-taken;
+  renderLockBar(); renderLockList();
 }
 
 function mkAdminSeat(id,conf,pend,adminRes,mapDate){
@@ -951,6 +1032,7 @@ function mkAdminSeat(id,conf,pend,adminRes,mapDate){
 function handleSeatClick(sid,isCon,isPend,isAdmin){
   // booked seats show their info; free / reserved seats can be selected
   if(isCon||isPend){ showSeatInfo(sid); return; }
+  if(getLock(curMapRoute,$('map-date').value)){ showToast('🔒 This bus is locked on this date. Unlock it first.'); return; }
   selSeats.has(sid)?selSeats.delete(sid):selSeats.add(sid);
   updatePop(); renderSeatMap();
 }
@@ -971,6 +1053,7 @@ async function spReserve(){
   const {adminRes}=getSeatStates(curMapRoute,d);
   const seats=sortSeats([...selSeats]);
   if(!seats.length) return;
+  if(getLock(curMapRoute,d)){ showToast('🔒 Bus is locked on this date.'); return; }
   if(seats.some(s=>adminRes.has(s))){ showToast('Some selected seats are already reserved. Deselect them first.'); return; }
   const prev=bookings, base=String(Date.now()).slice(-5);
   seats.forEach((s,i)=>{
@@ -1086,6 +1169,7 @@ async function bkSave(){
   const name=$('bk-name').value.trim(), phone=$('bk-phone').value.trim();
   const route=$('bk-route').value, date=$('bk-date').value;
   if(!name||!phone||!date) return show('Please fill Name, Phone and Travel date.');
+  const lk=getLock(route,date); if(lk) return show(lockMsg(lk));
   const seats=sortSeats([...selSeats]);
   const clash=bookings.some(b=>b.route===route&&b.date===date&&b.status!=='Cancelled'&&b.status!=='AdminReserved'&&b.seats.some(s=>seats.includes(String(s))));
   if(clash) return show('One of these seats is already booked on that route and date.');
@@ -1492,6 +1576,7 @@ async function addBooking(){
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
   if(parsed.bad.length){ err.textContent='Unknown seat(s): '+parsed.bad.join(', '); err.style.display='block'; return; }
   err.style.display='none';
+  const lk=getLock(route,date); if(lk){ err.textContent=lockMsg(lk); err.style.display='block'; return; }
   bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,seatVer:2,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
   try{ await saveData(); clearAddForm(); refreshAll(); showToast('Booking saved!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
@@ -1511,6 +1596,7 @@ async function saveModalBooking(){
   if(!name||!phone||!date||!seats.length){ err.textContent='Please fill Name, Phone, Date and Seats.'; err.style.display='block'; return; }
   if(parsed.bad.length){ err.textContent='Unknown seat(s): '+parsed.bad.join(', '); err.style.display='block'; return; }
   err.style.display='none';
+  const lk=getLock(route,date); if(lk){ err.textContent=lockMsg(lk); err.style.display='block'; return; }
   bookings.push({id:'BK'+String(Date.now()).slice(-5),name,phone,email,route,date,seats,seatVer:2,status,notes,isAdminBlock:false,created:new Date().toISOString().split('T')[0]});
   try{ await saveData(); ['m-name','m-phone','m-email','m-date','m-seats','m-notes'].forEach(id=>document.getElementById(id).value=''); closeAddModal(); refreshAll(); showToast('Booking added!'); }catch(e){ showToast((e&&e.hint)?('Error: '+e.message):'Save error'); }
 }
@@ -1577,7 +1663,7 @@ async function bootConnect(){
 }
 function retryConnect(){ bootConnect(); }
 function continueOffline(){
-  bookings=[]; coupons=[];
+  bookings=[]; coupons=[]; locks=[];
   document.getElementById('pgload').style.display='none';
   renderDashboard();
   document.getElementById('map-date').valueAsDate=new Date();
